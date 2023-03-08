@@ -1,0 +1,2 @@
+morai_msgs:ssafy_ad/ssafy_1:ssafy_ad/ssafy_2:ssafy_ad/ssafy_3
+-DCATKIN_DEVEL_PREFIX=/home/baek/c108/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/baek/c108/catkin_ws/install -G Unix Makefiles
