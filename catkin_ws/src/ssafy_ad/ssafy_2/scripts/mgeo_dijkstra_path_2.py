@@ -37,7 +37,7 @@ from lib.mgeo.class_defs import *
 # 11. dijkstra 이용해 만든 Global Path 정보 Publish
 
 #TODO: (0) 필수 학습 지식
-'''
+
 # dijkstra 알고리즘은 그래프 구조에서 노드 간 최단 경로를 찾는 알고리즘 입니다.
 # 시작 노드부터 다른 모든 노드까지의 최단 경로를 탐색합니다.
 # 다양한 서비스에서 실제로 사용 되며 인공 위성에도 사용되는 방식 입니다.
@@ -52,7 +52,7 @@ from lib.mgeo.class_defs import *
 # 5. 3 ~ 4 과정을 반복 
 # 
 
-'''
+
 class dijkstra_path_pub :
     def __init__(self):
         rospy.init_node('dijkstra_path_pub', anonymous=True)
@@ -93,17 +93,17 @@ class dijkstra_path_pub :
         rate = rospy.Rate(10) # 10hz
         while not rospy.is_shutdown():
             #TODO: (11) dijkstra 이용해 만든 Global Path 정보 Publish
-            '''
-            # dijkstra 이용해 만든 Global Path 메세지 를 전송하는 publisher 를 만든다.
-            self.global_path_pub.
             
-            '''
+            # dijkstra 이용해 만든 Global Path 메세지 를 전송하는 publisher 를 만든다.
+            self.global_path_pub.publish(self.global_path_msg)
+            
+            
             rate.sleep()
     
     def init_callback(self,msg):
         #TODO: (2) 시작 Node 와 종료 Node 정의
         # 시작 Node 는 Rviz 기능을 이용해 지정한 위치에서 가장 가까이 있는 Node 로 한다.
-        '''
+        
         # Rviz 의 2D Pose Estimate 기능을 이용해 시작 Node를 지정합니다.
         # Rviz 창에서 2D Pose Estimate 기능 클릭 후 마우스 좌 클릭을 통해 원하는 위치를 지정할 수 있습니다.
         # 출발 위치를 2D Pose Estimate 지정 하면 Rviz 에서
@@ -111,28 +111,48 @@ class dijkstra_path_pub :
         # 해당 형식의 메세지를 Subscribe 해서  2D Pose Estimate 로 지정한 위치와 가장 가까운 노드를 탐색하는 합니다.
         # 가장 가까운 Node 가 탐색 된다면 이를 "self.start_node" 변수에 해당 Node Idx 를 지정합니다.
 
-        self.start_node = node_idx
-
-        '''
+        start_min_dis=float('inf')
+        self.init_msg=msg
+        self.init_x=self.init_msg.pose.pose.position.x
+        self.init_y=self.init_msg.pose.pose.position.y
+        
+        for node_idx in self.nodes:
+            node_pose_x=self.nodes[node_idx].point[0]
+            node_pose_y=self.nodes[node_idx].point[1]
+            start_dis = sqrt(pow(self.init_x - node_pose_x, 2) + pow(self.init_y - node_pose_y, 2))
+            if start_dis < start_min_dis :
+                start_min_dis=start_dis
+                self.start_node = node_idx
 
         self.is_init_pose = True
+        
 
     def goal_callback(self,msg):
         #TODO: (2) 시작 Node 와 종료 Node 정의
         # 종료 Node 는 Rviz 기능을 이용해 지정한 위치에서 가장 가까이 있는 Node 로 한다.
-        '''
+        
         # Rviz 의 2D Nav Goal 기능을 이용해 도착 Node를 지정합니다.
         # Rviz 창에서 2D Nav Goal 기능 클릭 후 마우스 좌 클릭을 통해 원하는 위치를 지정할 수 있습니다.
         # 도착 위치를 2D Nav Goal 지정 하면 Rviz 에서
         # PoseStamped 형식의 ROS 메세지를 Publish 합니다.
         # 해당 형식의 메세지를 Subscribe 해서  2D Nav Goal 로 지정한 위치와 가장 가까운 노드를 탐색하는 합니다.
         # 가장 가까운 Node 가 탐색 된다면 이를 "self.start_node" 변수에 해당 Node Idx 를 지정합니다.
+        goal_min_dis=float('inf')
+        self.goal_msg = msg
+        self.goal_x=self.goal_msg.pose.position.x
+        self.goal_y=self.goal_msg.pose.position.y
+        
+        for node_idx in self.nodes:
+            node_pose_x=self.nodes[node_idx].point[0]
+            node_pose_y=self.nodes[node_idx].point[1]
+            goal_dis = sqrt(pow(self.goal_x - node_pose_x, 2) + pow(self.goal_y - node_pose_y, 2))
 
-        self.end_node = node_idx
-
-        '''
+            if goal_dis < goal_min_dis :
+                goal_min_dis=goal_dis
+                self.end_node = node_idx
 
         self.is_goal_pose = True
+
 
     def calc_dijkstra_path_node(self, start_node, end_node):
 
@@ -197,6 +217,20 @@ class Dijkstra:
         # shortest_link 의 min_cost 를 계산 합니다.
 
         '''
+        to_links = []
+        for link in from_node.get_to_links():
+            if link.to_node is to_node:
+                to_links.append(link)
+
+        if len(to_links) == 0:
+            raise BaseException('[ERROR] Error @ Dijkstra.find_shortest_path : Internal data error. There is no link from node to node')
+
+        shortest_link = None
+        min_cost = float('inf')
+        for link in to_links:
+            if link.cost < min_cost:
+                min_cost = link.cost
+                shortest_link = link
 
         return shortest_link, min_cost
         
