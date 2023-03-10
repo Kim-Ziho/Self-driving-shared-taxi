@@ -42,20 +42,19 @@ class pure_pursuit :
         rospy.init_node('pure_pursuit', anonymous=True)
 
         #TODO: (1) subscriber, publisher 선언
-        '''
+        
         # Local/Gloabl Path 와 Odometry Ego Status 데이터를 수신 할 Subscriber 를 만들고 
         # CtrlCmd 를 시뮬레이터로 전송 할 publisher 변수를 만든다.
         # CtrlCmd 은 1장을 참고 한다.
         # Ego topic 데이터는 차량의 현재 속도를 알기 위해 사용한다.
         # Gloabl Path 데이터는 경로의 곡률을 이용한 속도 계획을 위해 사용한다.
-        rospy.Subscriber("/global_path" )
-        rospy.Subscriber("local_path" )
-        rospy.Subscriber("odom" )
-        rospy.Subscriber("/Ego_topic" )
-        rospy.Subscriber("/Object_topic" )
-        self.ctrl_cmd_pub = 
-
-        '''
+        rospy.Subscriber("/global_path", Path, self.global_path_callback)
+        rospy.Subscriber("/local_path", Path, self.path_callback)
+        rospy.Subscriber("/odom", Odometry, self.odom_callback)
+        rospy.Subscriber("/Ego_topic", EgoVehicleStatus, self.status_callback)
+        rospy.Subscriber("/Object_topic", ObjectStatusList, self.object_info_callback)
+        self.ctrl_cmd_pub = rospy.Publisher("/ctrl_cmd", CtrlCmd, queue_size=1)
+        
 
         self.ctrl_cmd_msg = CtrlCmd()
         self.ctrl_cmd_msg.longlCmdType = 1
@@ -129,11 +128,11 @@ class pure_pursuit :
                     self.ctrl_cmd_msg.brake = -output
 
                 #TODO: (10) 제어입력 메세지 Publish
-                '''
-                # 제어입력 메세지 를 전송하는 publisher 를 만든다.
-                self.ctrl_cmd_pub.
                 
-                '''
+                # 제어입력 메세지 를 전송하는 publisher 를 만든다.
+                self.ctrl_cmd_pub.publish(self.ctrl_cmd_msg)
+                
+                
 
             rate.sleep()
 
@@ -233,18 +232,18 @@ class pure_pursuit :
     def calc_pure_pursuit(self,):
 
         #TODO: (2) 속도 비례 Look Ahead Distance 값 설정
-        '''
+        
         # 차량 속도에 비례하여 전방주시거리(Look Forward Distance) 가 변하는 수식을 구현 합니다.
         # 이때 'self.lfd' 값은 최소와 최대 값을 넘어서는 안됩니다.
         # "self.min_lfd","self.max_lfd", "self.lfd_gain" 을 미리 정의합니다.
         # 최소 최대 전방주시거리(Look Forward Distance) 값과 속도에 비례한 lfd_gain 값을 직접 변경해 볼 수 있습니다.
         # 초기 정의한 변수 들의 값을 변경하며 속도에 비례해서 전방주시거리 가 변하는 advanced_purepursuit 예제를 완성하세요.
         # 
-        self.lfd = 
+        self.lfd = self.lfd_gain * min(self.max_lfd, max(self.min_lfd, self.status_msg.velocity.x))
 
         rospy.loginfo(self.lfd)
 
-        '''
+        
         
         vehicle_position=self.current_postion
         self.is_look_forward_point= False
@@ -252,7 +251,7 @@ class pure_pursuit :
         translation = [vehicle_position.x, vehicle_position.y]
 
         #TODO: (3) 좌표 변환 행렬 생성
-        '''
+        
         # Pure Pursuit 알고리즘을 실행 하기 위해서 차량 기준의 좌표계가 필요합니다.
         # Path 데이터를 현재 차량 기준 좌표계로 좌표 변환이 필요합니다.
         # 좌표 변환을 위한 좌표 변환 행렬을 작성합니다.
@@ -261,35 +260,37 @@ class pure_pursuit :
         # 좌표 변환 행렬을 이용해 Path 데이터를 차량 기준 좌표 계로 바꾸는 반복 문을 작성 한 뒤
         # 전방주시거리(Look Forward Distance) 와 가장 가까운 Path Point 를 계산하는 로직을 작성 하세요.
 
-        trans_matrix = np.array([   [                       ,                       ,               ],
-                                    [                       ,                       ,               ],
-                                    [0                      ,0                      ,1              ]])
+        trans_matrix = np.array([
+                [cos(self.vehicle_yaw), -sin(self.vehicle_yaw),translation[0]],
+                [sin(self.vehicle_yaw),cos(self.vehicle_yaw),translation[1]],
+                [0                    ,0                    ,1            ]])
 
         det_trans_matrix = np.linalg.inv(trans_matrix)
 
         for num,i in enumerate(self.path.poses) :
-            path_point = 
+            path_point = i.pose.position
 
-            global_path_point = [ , , 1]
+            global_path_point =[path_point.x,path_point.y,1]
             local_path_point = det_trans_matrix.dot(global_path_point)    
 
             if local_path_point[0]>0 :
-                dis = 
+                dis = sqrt(pow(local_path_point[0],2)+pow(local_path_point[1],2))
                 if dis >= self.lfd :
-                    self.forward_point = 
+                    self.forward_point = path_point
                     self.is_look_forward_point = True
                     break
 
-        '''
+        
         #TODO: (4) Steering 각도 계산
-        '''
+        
         # 제어 입력을 위한 Steering 각도를 계산 합니다.
         # theta 는 전방주시거리(Look Forward Distance) 와 가장 가까운 Path Point 좌표의 각도를 계산 합니다.
         # Steering 각도는 Pure Pursuit 알고리즘의 각도 계산 수식을 적용하여 조향 각도를 계산합니다.
-        theta = 
-        steering = 
+        steering=0.0
+        if self.is_look_forward_point :
+            theta=atan2(local_path_point[1],local_path_point[0])
+            steering=atan2(2*self.vehicle_length*sin(theta),self.lfd)
 
-        '''
 
         return steering
 
@@ -306,21 +307,20 @@ class pidControl:
         error = target_vel - current_vel
 
         #TODO: (5) PID 제어 생성
-        '''
+        
         # 종방향 제어를 위한 PID 제어기는 현재 속도와 목표 속도 간 차이를 측정하여 Accel/Brake 값을 결정 합니다.
         # 각 PID 제어를 위한 Gain 값은 "class pidContorl" 에 정의 되어 있습니다.
         # 각 PID Gain 값을 직접 튜닝하고 아래 수식을 채워 넣어 P I D 제어기를 완성하세요.
 
-        p_control = 
-        self.i_control += 
-        d_control = 
+        p_control = self.p_gain*error
+        self.i_control += error*self.controlTime
+        d_control = self.d_gain*(error-self.prev_error)/self.controlTime
 
-        output = 
-        self.prev_error = 
-
-        '''
+        output = p_control + self.i_gain*self.i_control + d_control
+        self.prev_error = error
 
         return output
+
 
 class velocityPlanning:
     def __init__ (self,car_max_speed, road_friciton):
@@ -343,24 +343,28 @@ class velocityPlanning:
                 y_list.append((-x*x) - (y*y))
 
             #TODO: (6) 도로의 곡률 계산
-            '''
+            
             # 도로의 곡률 반경을 계산하기 위한 수식입니다.
             # Path 데이터의 좌표를 이용해서 곡선의 곡률을 구하기 위한 수식을 작성합니다.
             # 원의 좌표를 구하는 행렬 계산식, 최소 자승법을 이용하는 방식 등 곡률 반지름을 구하기 위한 식을 적용 합니다.
             # 적용한 수식을 통해 곡률 반지름 "r" 을 계산합니다.
 
-            r = 
+            A = np.array(x_list)
+            B = np.array(y_list)
+            a, b, c = np.dot(np.linalg.pinv(A), B)
+            
+            r = sqrt(a**2 + b**2 - c)
 
-            '''
+            
 
             #TODO: (7) 곡률 기반 속도 계획
-            '''
+            
             # 계산 한 곡률 반경을 이용하여 최고 속도를 계산합니다.
             # 평평한 도로인 경우 최대 속도를 계산합니다. 
             # 곡률 반경 x 중력가속도 x 도로의 마찰 계수 계산 값의 제곱근이 됩니다.
-            v_max = 
+            v_max = sqrt(r * 9.8 * self.road_friction)
 
-            '''
+            
             if v_max > self.car_max_speed:
                 v_max = self.car_max_speed
             out_vel_plan.append(v_max)
@@ -391,7 +395,7 @@ class AdaptiveCruiseControl:
                                     global_ped_info, local_ped_info, 
                                     global_obs_info, local_obs_info):
         #TODO: (8) 경로상의 장애물 유무 확인 (차량, 사람, 정지선 신호)
-        '''
+        
         # 주행 경로 상의 장애물의 유무를 파악합니다.
         # 장애물이 한개 이상 있다면 self.object 변수의 첫번째 값을 True 로 둡니다.
         # 장애물의 대한 정보는 List 형식으로 self.object 변수의 두번째 값으로 둡니다.
@@ -400,40 +404,40 @@ class AdaptiveCruiseControl:
         # 경로를 기준으로 2.5 m 안쪽에 있다면 주행 경로 내 장애물이 있다고 판단 합니다.
         # 주행 경로 상 장애물이 여러게 있는 경우 가장 가까이 있는 장애물 정보를 가지도록 합니다.
 
-        '''
+        
 
-        '''
+        
         # 주행 경로 상 보행자 유무 파악
         min_rel_distance=float('inf')
         if len(global_ped_info) > 0 :        
             for i in range(len(global_ped_info)):
                 for path in ref_path.poses :      
                     if global_ped_info[i][0] == 0 : # type=0 [pedestrian]                    
-                        dis = 
+                        dis = sqrt((path.pose.position.x - global_ped_info[i][1])**2 + (path.pose.position.y - global_ped_info[i][2])**2)
                         if dis<2.35:                            
-                            rel_distance = 
+                            rel_distance = sqrt((self.current_postion.x - global_ped_info[i][1])**2 + (self.current_postion.y - global_ped_info[i][2])**2)
                             if rel_distance < min_rel_distance:
-                                min_rel_distance = 
+                                min_rel_distance = rel_distance
                                 self.Person=[True,i]
 
-        '''
+        
 
-        '''
+        
         # 주행 경로 상 NPC 차량 유무 파악
         if len(global_npc_info) > 0 :            
             for i in range(len(global_npc_info)):
                 for path in ref_path.poses :      
                     if global_npc_info[i][0] == 1 : # type=1 [npc_vehicle] 
-                        dis = 
+                        dis = sqrt((path.pose.position.x - global_npc_info[i][1])**2 + (path.pose.position.y - global_npc_info[i][2])**2)
                         if dis<2.35:
-                            rel_distance =        
+                            rel_distance = sqrt((self.current_postion.x - global_npc_info[i][1])**2 + (self.current_postion.y - global_npc_info[i][2])**2)
                             if rel_distance < min_rel_distance:
-                                min_rel_distance = 
+                                min_rel_distance = rel_distance
                                 self.npc_vehicle=[True,i]
         
-        '''
+        
 
-        '''
+        
         # 주행 경로 상 Obstacle 유무 파악
         # acc 예제는 주행 중 전방에 차량에 속도에 맞춰 움직이도록 하는 Cruise Control
         # 예제 이기 때문에 정적 장애물(Obstacle) 의 정보는 받지 않는게 좋습니다.
@@ -443,14 +447,14 @@ class AdaptiveCruiseControl:
             for i in range(len(global_obs_info)):
                 for path in ref_path.poses :      
                     if global_obs_info[i][0] == 2 : # type=1 [obstacle] 
-                        dis = 
+                        dis = sqrt((path.pose.position.x - global_obs_info[i][1])**2 + (path.pose.position.y - global_obs_info[i][2])**2)
                         if dis<2.35:
-                            rel_distance=                
+                            rel_distance= sqrt((self.current_postion.x - global_obs_info[i][1])**2 + (self.current_postion.y - global_obs_info[i][2])**2)
                             if rel_distance < min_rel_distance:
-                                min_rel_distance = 
+                                min_rel_distance = rel_distance
                                 # self.object=[True,i] 
         
-        '''
+        
 
     def get_target_velocity(self, local_npc_info, local_ped_info, local_obs_info, ego_vel, target_vel): 
         #TODO: (9) 장애물과의 속도와 거리 차이를 이용하여 ACC 를 진행 목표 속도를 설정
