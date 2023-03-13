@@ -36,28 +36,27 @@ from numpy.linalg import inv
 # 차량 뒷축 중심을 기준으로 설치된 센서들의 위치를 입력해줍니다. (X,Y,Z,Roll,Pitch,Yaw)
 # Roll, Pitch, Yaw 입력 시에는 Radian 값으로 변환하여 입력해주어야 합니다.
 # Camera는 추가로 Width, Height, Horizontal FOV 값을 입력합니다.
-
+'''
 parameters_cam = {
-    "WIDTH": , # image width
-    "HEIGHT": , # image height
-    "FOV": , # Field of view
-    "X": , # meter
-    "Y": ,
-    "Z": ,
-    "YAW": , # radian    
-    "PITCH": ,
-    "ROLL": 
+    "WIDTH": 640, # image width
+    "HEIGHT": 480, # image height
+    "FOV": 90, # Field of view
+    "X": 3.52, # meter
+    "Y": 0.0,
+    "Z": 0.58,
+    "YAW": 0, # radian    
+    "PITCH": 0,
+    "ROLL": 0,
 }
 
 parameters_lidar = {
-    "X": , # meter
-    "Y": ,
-    "Z": ,
-    "YAW": , # radian
-    "PITCH": ,
-    "ROLL": 
+    "X": 1.25, # meter
+    "Y": 0,
+    "Z": 1.23,
+    "YAW": 0.0, # radian
+    "PITCH": 0.0,
+    "ROLL": 0,
 }
-'''
 
 def getRotMat(RPY):        
     #TODO: (2.1.1) Rotation Matrix 계산 함수 구현
@@ -69,7 +68,7 @@ def getRotMat(RPY):
     # Oputput
         # rotMat : 3x3 Rotation Matrix of sensor w.r.t vehicle.
     # Tip : math, numpy
-    
+    '''
     cosR = math.cos(RPY[0])
     cosP = math.cos(RPY[1])
     cosY = math.cos(RPY[2])
@@ -77,13 +76,28 @@ def getRotMat(RPY):
     sinP = math.sin(RPY[1])
     sinY = math.sin(RPY[2])
     
-    rotRoll = 
-    rotPitch = 
-    rotYaw = 
+    rotRoll = np.array([
+        [1,    0,     0, 0],
+        [0, cosR, -sinR, 0],
+        [0, sinR, cosR,  0],
+        [0, 0, 0, 1]
+    ])
+    rotPitch = np.array([
+        [cosP, 0, -sinP, 0],
+        [0,    1,     0, 0],
+        [sinP, 0,  cosP, 0],
+        [0,    0,     0, 1]
+    ])
+    rotYaw = np.array([
+        [cosY, -sinY, 0, 0],
+        [sinY,  cosY, 0, 0],
+        [0,        0, 1, 0],
+        [0,        0, 0, 1]
+    ])
 
     rotMat = rotYaw.dot(rotPitch.dot(rotRoll))    
     return rotMat
-    '''
+    
 
 def getSensorToVehicleMat(sensorRPY, sensorPosition):
     #TODO: (2.1.2) Transformation Matrix 계산 함수 구현
@@ -98,13 +112,18 @@ def getSensorToVehicleMat(sensorRPY, sensorPosition):
     # Output
         # Tr_sensor_to_vehicle : 4x4 Transformation Matrix of sensor w.r.t vehicle.
     # Tip : numpy
-
-    sensorRotationMat = 
-    sensorTranslationMat = 
-    Tr_sensor_to_vehicle = 
+    '''
+    sensorRotationMat = getRotMat(sensorRPY)
+    sensorTranslationMat = np.array([
+        [1, 0, 0, sensorPosition[0]],
+        [0, 1, 0, sensorPosition[1]],
+        [0, 0, 1, sensorPosition[2]],
+        [0, 0, 0,                 1]
+    ])
+    Tr_sensor_to_vehicle = sensorTranslationMat.dot(sensorRotationMat)
     
     return Tr_sensor_to_vehicle
-    '''
+    
     
 def getLiDARTOCameraTransformMat(camRPY, camPosition, lidarRPY, lidarPosition):
     #TODO: (2.2) LiDAR to Camera Transformation Matrix 계산
@@ -123,15 +142,15 @@ def getLiDARTOCameraTransformMat(camRPY, camPosition, lidarRPY, lidarPosition):
     # Output
         # Tr_lidar_to_cam
     # Tip : getSensorToVehicleMat, inv 사용 필요
-
-    Tr_lidar_to_vehicle = 
-    Tr_cam_to_vehicle =     
-    Tr_vehicle_to_cam = 
-    Tr_lidar_to_cam = 
+    '''
+    Tr_lidar_to_vehicle = getSensorToVehicleMat(lidarRPY, lidarPosition)
+    Tr_cam_to_vehicle = getSensorToVehicleMat(camRPY, camPosition)
+    Tr_vehicle_to_cam = inv(Tr_cam_to_vehicle)
+    Tr_lidar_to_cam = Tr_lidar_to_vehicle.dot(Tr_vehicle_to_cam)
     
     print(Tr_lidar_to_cam)
     return Tr_lidar_to_cam
-    '''
+    
 
 def getTransformMat(params_cam, params_lidar):
     #With Respect to Vehicle ISO Coordinate    
@@ -156,15 +175,21 @@ def getCameraMat(params_cam):
         # params_cam : camera parameters
     # Output
         # CameraMat : 3x3 Intrinsic Matrix(a.k.a. Camera Matrix)    
+    '''
+    fc_x = params_cam["HEIGHT"]/(2*np.tan(np.deg2rad(params_cam["FOV"]/2)))
+    fc_y = params_cam["HEIGHT"]/(2*np.tan(np.deg2rad(params_cam["FOV"]/2)))
 
-    focalLength = 
-    principalX = 
-    principalY = 
-    CameraMat = 
-    
+    # focalLength = np.array([[fc_x, 0],
+    #                         [0, fc_y]])
+
+    principalX = params_cam["WIDTH"]/2
+    principalY = params_cam["HEIGHT"]/2
+    CameraMat = np.array([[fc_x,  0,      principalX],
+                          [0,     fc_y,   principalY],
+                          [0,     0,               1]])
     print(CameraMat)
     return CameraMat
-    '''
+    
 
 # Variables
     # scan_sub : ROS Subscriber of lidar data

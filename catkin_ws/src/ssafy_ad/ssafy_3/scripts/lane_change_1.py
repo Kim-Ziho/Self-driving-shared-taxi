@@ -48,17 +48,17 @@ class lc_path_pub :
         rospy.Subscriber(object_topic_name, ObjectStatusList, self.object_info_callback)
 
         #TODO: (1) subscriber, publisher 선언
-        '''
+        
         # Gloabl Path 와 Odometry, Object 데이터를 수신 할 Subscriber 를 만들고 
         # lane_change_path 를 전송 할 publisher 변수를 만든다.
         # lane_change_path 는 차선변경 예제에서 활용할 지역경로(Loacl Path)이다.
         # lane_change_path 의 Topic 이름은 '/lane_change_path' 이고
         # ROS 메시지 형식은 Path 이다.
-        rospy.Subscriber( "odom" )
-        self.global_path_pub = 
-        self.local_path_pub = 
+        rospy.Subscriber("/odom", Odometry, self.odom_callback)
+        self.global_path_pub = rospy.Publisher("/global_path", Path, queue_size=2)
+        self.local_path_pub = rospy.Publisher("/lane_change_path", Path, queue_size=2)
 
-        '''
+    
 
         self.lc_1=Path()
         self.lc_1.header.frame_id='/map'
@@ -68,18 +68,35 @@ class lc_path_pub :
         #TODO: (2) 두개의 차선 경로 의 텍스트파일을 읽기 모드로 열기
         rospack=rospkg.RosPack()
         pkg_path=rospack.get_path('ssafy_3')
-        '''
+        
         lc_1 = pkg_path + '/path' + '/lc_1.txt'
         self.f=open(lc_1,'r')
-
+        lines = self.f.readlines()
+        for line in lines :
+            tmp = line.split()
+            read_pose = PoseStamped()
+            read_pose.pose.position.x = float(tmp[0])
+            read_pose.pose.position.y = float(tmp[1])
+            read_pose.pose.orientation.w = 1
+            self.lc_1.poses.append(read_pose)
         self.f.close()
 
         lc_2 = pkg_path + '/path' + '/lc_2.txt'
         self.f=open(lc_2,'r')
 
+        lines = self.f.readlines()
+        
+        for line in lines :
+            tmp = line.split()
+            read_pose = PoseStamped()
+            read_pose.pose.position.x = float(tmp[0])
+            read_pose.pose.position.y = float(tmp[1])
+            read_pose.pose.orientation.w = 1
+            self.lc_2.poses.append(read_pose)        
+
         self.f.close()
 
-        '''
+        
 
         self.is_object_info = False
         self.is_odom = False
@@ -90,11 +107,11 @@ class lc_path_pub :
         self.current_lane = 1
 
         #TODO: (3) 읽어 온 경로 데이터를 Global Path 로 지정
-        '''
+        
         # 읽어 온 Path 데이터 중 Ego 차량의 시작 경로를 지정합니다.
         global_path = self.lc_1
 
-        '''
+        
         
         rate = rospy.Rate(10) # 10hz
         while not rospy.is_shutdown():
@@ -111,12 +128,12 @@ class lc_path_pub :
                 global_path = self.lc_planning(global_npc_info,local_npc_info,currnet_waypoint,global_path)
 
                 #TODO: (6) 경로 데이터 Publish
-                '''
-                # 경로 데이터 메세지 를 전송하는 publisher 를 만든다.
-                self.local_path_pub.
-                self.global_path_pub.
                 
-                '''
+                # 경로 데이터 메세지 를 전송하는 publisher 를 만든다.
+                self.local_path_pub.publish(self.local_path_msg)
+                self.global_path_pub.publish(global_path)
+                
+                
 
             rate.sleep()
 
@@ -247,7 +264,7 @@ class lc_path_pub :
     def check_object(self,ref_path,global_vaild_object,local_vaild_object): 
         #TODO: (4) 주행 경로상의 장애물 유무 확인
         self.object=[False,0]
-        '''
+        
         # 주행 경로 상의 장애물의 유무를 파악합니다.
         # 장애물이 한개 이상 있다면 self.object 변수의 첫번째 값을 True 로 둡니다.
         # 장애물의 대한 정보는 List 형식으로 self.object 변수의 두번째 값으로 둡니다.
@@ -261,13 +278,13 @@ class lc_path_pub :
             for i in range(len(global_vaild_object)):
                 for path in ref_path.poses :   
                     if global_vaild_object[i][0]==1 or global_vaild_object[i][0]==2 :  
-                        dis = 
+                        dis = sqrt((path.pose.position.x - global_vaild_object[i][1])**2 + (path.pose.position.y - global_vaild_object[i][2])**2)
                         if dis<2.5:
-                            rel_distance=                         
+                            rel_distance= sqrt((local_vaild_object[i][1])**2 + (local_vaild_object[i][2])**2)
                             if rel_distance < min_rel_distance:
-                                min_rel_distance = 
+                                min_rel_distance = rel_distance
                                 self.object=[True,i]
-        '''
+        
 
 if __name__ == '__main__':
     try:
