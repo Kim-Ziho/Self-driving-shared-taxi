@@ -64,6 +64,8 @@ class IMGParser:
 
         curve_learner = CURVEFit(order=, lane_width= ,y_margin=, x_range=, min_pts=)
         '''
+        curve_learner = CURVEFit(order=3, alpha=10, lane_width=3.5, y_margin=0.5, x_range=5, dx=0.5, min_pts=50)
+
         #END
         rate = rospy.Rate(10)
 
@@ -382,23 +384,23 @@ class CURVEFit:
         self.lane_path = Path()
         
         #TODO: (2) RANSAC Parameter 입력
-        '''
+        
         # RANSAC Parameter를 결정하는 영역입니다.
         # RANSAC의 개념 및 아래 링크를 참고하여 적절한 Parameter를 입력하기 바랍니다.
         # https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html
         
         self.ransac_left = linear_model.RANSACRegressor(base_estimator=linear_model.Lasso(alpha=alpha),
-                                                        max_trials=입력,
+                                                        max_trials=5,
                                                         loss='absolute_loss',
                                                         min_samples=self.min_pts,
                                                         residual_threshold=self.y_margin)
 
         self.ransac_right = linear_model.RANSACRegressor(base_estimator=linear_model.Lasso(alpha=alpha),
-                                                        max_trials=입력,
+                                                        max_trials=5,
                                                         loss='absolute_loss',
                                                         min_samples=self.min_pts,
                                                         residual_threshold=self.y_margin)
-        '''
+        
         
         self._init_model()
 

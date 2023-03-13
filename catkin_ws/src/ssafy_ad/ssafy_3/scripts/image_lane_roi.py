@@ -30,6 +30,15 @@ class IMGParser:
         self.crop_pts =
 
         '''
+        self.crop_pts = np.array(
+            [[
+                [5, 365],
+                [233, 265],
+                [395, 265],
+                [650, 365],
+            ]]
+        )
+
 
     def callback(self, msg):
         # uint8 : unsined integer 0~255 로 만들기 위함입니다.
@@ -80,6 +89,7 @@ class IMGParser:
         찾습니다.
         cv2.
         '''
+        cv2.fillPoly(mask, self.crop_pts, mask_value)
 
         #TODO : (3)
         '''
@@ -87,6 +97,7 @@ class IMGParser:
         두 이미지의 동일한 위치에 대한 연산을 진행합니다.
         mask = cv2.
         '''
+        mask = cv2.bitwise_and(mask, img)
         
         return mask
 

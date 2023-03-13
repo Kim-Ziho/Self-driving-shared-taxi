@@ -35,6 +35,7 @@ class SCANCluster:
 
         self.dbscan = DBSCAN( , , ...)
         '''
+        self.dbscan = DBSCAN(eps = 0.3, min_samples=10)
     
     def callback(self, msg):    
         self.pc_np = self.pointcloud2_to_xyz(msg)
@@ -67,6 +68,10 @@ class SCANCluster:
                 #tmp_pose.position.x = 
                 #tmp_pose.position.y = 
                 '''
+                tmp_pose=Pose()
+                tmp_pose.position.x = pc_xy[cluster][0]
+                tmp_pose.position.y = pc_xy[cluster][1]
+
                 cluster_msg.poses.append(tmp_pose)
                 
         self.cluster_pub.publish(cluster_msg)
@@ -85,6 +90,8 @@ class SCANCluster:
             dist = 
             angle = 
             '''
+            dist = (point[0]**2 + point[1]**2 + point[2]**2)**0.5
+            angle = atan2(point[1], point[0])
             
             if point[0] > 0 and 1.50 > point[2] > -1.25 and dist < 50:
                 point_list.append((point[0], point[1], point[2], point[3], dist, angle))
