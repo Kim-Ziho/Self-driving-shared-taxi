@@ -59,7 +59,7 @@ class LL2UTMConverter:
         print(' lon : ', self.lon)
         print(' utm X : ', self.x)
         print(' utm Y : ', self.y)
-
+        print('x=%9.3f y=%11.3f' % (self.x, self.y))
         
 
 
