@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import rospy
 import tf
 from math import pi
@@ -23,9 +24,6 @@ class Ego_listener():
     def odom_callback(self,msg):
         self.is_odom = True
 
-        
-        # gpsimu_parser.py 예제에서 Publish 해주는 Odometry 메세지 데이터를 Subscrib 한다.
-        # Odometry 메세지 에 담긴 물체의 위치 와 자세 데이터를 아래 변수에 넣어준다.
         self.x = msg.pose.pose.position.x
         self.y = msg.pose.pose.position.y
 
@@ -33,22 +31,14 @@ class Ego_listener():
         self.orientation_y = msg.pose.pose.orientation.y
         self.orientation_z = msg.pose.pose.orientation.z
         self.orientation_w = msg.pose.pose.orientation.w
-
-        
-
+        print(self.orientation_x)
         #TODO: (2) 브로드캐스터 생성 및 Ego 상태 tf 브로드캐스팅
-        
-        # TF 데이터를 broadcast 해주는 변수를 선언한다.
-        # TF 데이터에 물체의 좌표와 자세 데이터를 시간 그리고 Frame ID 를 넣어주면 된다.
-        # TF 예제는 map 좌표 를 기준으로 Ego 차량의 위치를 좌표를 나타낸다
         br = tf.TransformBroadcaster()
-        br.sendTransform((self.x, self.y, 0),
-                        (self.orientation_x, self.orientation_y, self.orientation_z, self.orientation_w),
+        br.sendTransform((self.x, self.y, 1),
+                        (self.orientation_x,self.orientation_y,self.orientation_z,self.orientation_w),
                         rospy.Time.now(),
                         "Ego",
                         "map")
-
-        
 
 if __name__ == '__main__':
     try:

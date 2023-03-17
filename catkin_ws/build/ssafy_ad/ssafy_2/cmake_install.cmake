@@ -38,15 +38,53 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ssafy_2/msg" TYPE FILE FILES "/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_2/msg/student.msg")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ssafy_2/msg" TYPE FILE FILES
+    "/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_2/msg/student.msg"
+    "/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_2/msg/mvp.msg"
+    )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ssafy_2/srv" TYPE FILE FILES "/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_2/srv/AddTwoInts.srv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ssafy_2/srv" TYPE FILE FILES
+    "/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_2/srv/AddTwoInts.srv"
+    "/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_2/srv/GpsService.srv"
+    )
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ssafy_2/cmake" TYPE FILE FILES "/home/baek/c108/catkin_ws/build/ssafy_ad/ssafy_2/catkin_generated/installspace/ssafy_2-msg-paths.cmake")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/baek/c108/catkin_ws/devel/include/ssafy_2")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/baek/c108/catkin_ws/devel/share/roseus/ros/ssafy_2")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/baek/c108/catkin_ws/devel/share/common-lisp/ros/ssafy_2")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/baek/c108/catkin_ws/devel/share/gennodejs/ros/ssafy_2")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  execute_process(COMMAND "/usr/bin/python2" -m compileall "/home/baek/c108/catkin_ws/devel/lib/python2.7/dist-packages/ssafy_2")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages" TYPE DIRECTORY FILES "/home/baek/c108/catkin_ws/devel/lib/python2.7/dist-packages/ssafy_2")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/baek/c108/catkin_ws/build/ssafy_ad/ssafy_2/catkin_generated/installspace/ssafy_2.pc")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ssafy_2/cmake" TYPE FILE FILES "/home/baek/c108/catkin_ws/build/ssafy_ad/ssafy_2/catkin_generated/installspace/ssafy_2-msg-extras.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)

@@ -11,7 +11,7 @@ from ssafy_1.msg import student
 # 노드 실행 순서 
 # 1. ROS 노드 이름 선언
 # 2. Subscriber 생성
-# 3. Callback 함수 생성 및 데이터 출력
+# 3. Callback 함수 생성 및 데이터 출력 
 
 #TODO: (3) Callback 함수 생성 및 데이터 출력
 def callback(data):

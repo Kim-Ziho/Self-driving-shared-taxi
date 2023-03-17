@@ -34,11 +34,12 @@ class pathMaker :
         # pkg_name 과 path_name 은 22 번 줄 참고한다.
         rospack = rospkg.RosPack()
         pkg_path = rospack.get_path(pkg_name)
-        full_path = '/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_2/path/pathmaker.txt'
+        full_path = '/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_2/path/pathmaker2.txt'
         self.f = open(full_path,'w')
         
-        
+        print(full_path)
         while not rospy.is_shutdown():
+            print(self.is_odom)
             if self.is_odom == True :
                 # Ego 위치 기록
                 self.path_make()
@@ -48,15 +49,15 @@ class pathMaker :
         x = self.x
         y = self.y
         z = 0.0
+        print(x)
         #TODO: (3) 콜백함수에서 이전 위치와 현재 위치의 거리 계산
         
         # 현재 차량의 위치와 이전에 지나온 위치의 좌표 데이터를 구한다.
         # 구해진 좌표 사이의 거리를 계산한다.
         # 이전 위치 좌표는 아래 #TODO: (4)에서 정의 한다.
-        distance = sqrt( ((self.prev_x-x)**2) + ((self.prev_y-y)**2) )
+        distance = sqrt(((self.prev_x-x)**2)+((self.prev_y-y)**2))
 
-        
-
+        print('???')
         #TODO: (4) 이전 위치보다 0.5m 이상일 때 위치를 저장        
         if distance >0.5:
             
@@ -67,15 +68,15 @@ class pathMaker :
             self.f.write(data)
             self.prev_x =  x
             self.prev_y =  y
-            self.prev_z =  z
+            self.prev_z =  0.0
             
-            print(f'현재위치 x:{x}, y:{y}, z:{z}')
+            print(data)
             
 
     def odom_callback(self,msg):
         self.is_odom = True
         #TODO: (2) 콜백함수에서 처음 메시지가 들어오면 초기 위치를 저장
-
+        print('a')
         
         # gpsimu_parser.py 예제에서 Publish 해주는 Odometry 메세지 데이터를 Subscrib 한다.
         # Odometry 메세지 에 담긴 물체의 위치 데이터를 아래 변수에 넣어준다.

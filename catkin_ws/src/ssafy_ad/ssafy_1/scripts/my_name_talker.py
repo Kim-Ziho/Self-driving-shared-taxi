@@ -22,7 +22,7 @@ def talker():
     publisher = rospy.Publisher( 'my_name' , student , queue_size=10)
 
     
-    #TODO: (2) ROS 노드 이름 선언
+    #TODO: (2) ROS 노드 이름 선언 
     rospy.init_node('my_name_talker', anonymous=True)
 
     count = 0
