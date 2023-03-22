@@ -3,15 +3,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import db from "./Firebase";
 
 function TaxiRequest() {
   const [initnode, setInitnode] = useState("");
   const [endnode, setEndnode] = useState("");
   const [initcoor, setInitcoor] = useState([
-    37.240292239210696, 126.77383454342596,
+    37.582918740973305, 126.88875664944605,
   ]);
   const [endcoor, setEndcoor] = useState([
-    37.240292239210696, 126.77383454342596,
+    37.582918740973305, 126.88875664944605,
   ]);
   const [initmodalState, setInitModalState] = useState(false);
   const [endmodalState, setEndModalState] = useState(false);
@@ -39,6 +41,16 @@ function TaxiRequest() {
   function setEndnodeCoor() {
     setEndnode(endcoor);
     setEndModalState(false);
+  }
+
+  function callTaxi() {
+    const docRef = setDoc(doc(db, "User", "User1"), {
+      Initnode_lat: initcoor[0],
+      Initnode_lng: initcoor[1],
+      Endnode_lat: endcoor[0],
+      Endnode_lng: endcoor[1],
+    });
+    console.log("Document written with ID: ", docRef.id);
   }
 
   const appElement = document.getElementById("root");
@@ -69,26 +81,26 @@ function TaxiRequest() {
       )}
       <br></br>
       <br></br>
+      <button onClick={callTaxi}>택시호출</button>
 
       <Modal
         isOpen={initmodalState}
         onAfterOpen={() => {
+          // console.log(initnode);
           // console.log(11);
-          var mapContainer = document.getElementById("map"), // 지도를 표시할 div
+          var mapContainer = document.getElementById("map"),
             mapOption = {
               center: new kakao.maps.LatLng(initcoor[0], initcoor[1]),
               level: 4,
-              mapTypeId: kakao.maps.MapTypeId.ROADMAP, // 지도종류
+              mapTypeId: kakao.maps.MapTypeId.ROADMAP,
               draggable: true,
             };
           var map = new kakao.maps.Map(mapContainer, mapOption);
 
           var startSrc =
-              "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/red_b.png", // 출발 마커이미지의 주소입니다
-            startSize = new kakao.maps.Size(50, 45), // 출발 마커이미지의 크기입니다
-            startOption = {
-              offset: new kakao.maps.Point(15, 43), // 출발 마커이미지에서 마커의 좌표에 일치시킬 좌표를 설정합니다 (기본값은 이미지의 가운데 아래입니다)
-            };
+            "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/red_b.png";
+          var startSize = new kakao.maps.Size(50, 45);
+          var startOption = { offset: new kakao.maps.Point(15, 43) };
           var startImage = new kakao.maps.MarkerImage(
             startSrc,
             startSize,
@@ -96,17 +108,13 @@ function TaxiRequest() {
           );
           var startPosition = new kakao.maps.LatLng(initcoor[0], initcoor[1]);
           var startMarker = new kakao.maps.Marker({
-            map: map, // 출발 마커가 지도 위에 표시되도록 설정합니다
+            map: map,
             position: startPosition,
-            // draggable: true, // 출발 마커가 드래그 가능하도록 설정합니다
-            image: startImage, // 출발 마커이미지를 설정합니다
+
+            image: startImage,
           });
 
           kakao.maps.event.addListener(map, "center_changed", function () {
-            // 지도의  레벨을 얻어옵니다
-            // var level = map.getLevel();
-
-            // 지도의 중심좌표를 얻어옵니다
             var latlng = map.getCenter();
 
             startMarker.setPosition(
@@ -128,42 +136,38 @@ function TaxiRequest() {
       <Modal
         isOpen={endmodalState}
         onAfterOpen={() => {
-          var mapContainer = document.getElementById("map2"), // 지도를 표시할 div
+          if (!endnode) {
+            setInitcoor([37.582918740973305, 126.88875664944605]);
+          }
+          var mapContainer = document.getElementById("map2"),
             mapOption = {
               center: new kakao.maps.LatLng(endcoor[0], endcoor[1]),
               level: 4,
-              mapTypeId: kakao.maps.MapTypeId.ROADMAP, // 지도종류
+              mapTypeId: kakao.maps.MapTypeId.ROADMAP,
               draggable: true,
             };
           var map2 = new kakao.maps.Map(mapContainer, mapOption);
 
           var arriveSrc =
-              "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/blue_b.png", // 도착 마커이미지 주소입니다
-            arriveSize = new kakao.maps.Size(50, 45), // 도착 마커이미지의 크기입니다
-            arriveOption = {
-              offset: new kakao.maps.Point(15, 43), // 도착 마커이미지에서 마커의 좌표에 일치시킬 좌표를 설정합니다 (기본값은 이미지의 가운데 아래입니다)
-            };
+            "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/blue_b.png";
+          var arriveSize = new kakao.maps.Size(50, 45);
+          var arriveOption = {
+            offset: new kakao.maps.Point(15, 43),
+          };
 
-          // 도착 마커 이미지를 생성합니다
           var arriveImage = new kakao.maps.MarkerImage(
             arriveSrc,
             arriveSize,
             arriveOption
           );
 
-          // 도착 마커가 표시될 위치입니다
           var arrivePosition = new kakao.maps.LatLng(endcoor[0], endcoor[1]);
           var arriveMarker = new kakao.maps.Marker({
-            map: map2, // 도착 마커가 지도 위에 표시되도록 설정합니다
+            map: map2,
             position: arrivePosition,
-            // draggable: true, // 도착 마커가 드래그 가능하도록 설정합니다
-            image: arriveImage, // 도착 마커이미지를 설정합니다
+            image: arriveImage,
           });
           kakao.maps.event.addListener(map2, "center_changed", function () {
-            // 지도의  레벨을 얻어옵니다
-            // var level = map.getLevel();
-
-            // 지도의 중심좌표를 얻어옵니다
             var latlng = map2.getCenter();
 
             arriveMarker.setPosition(

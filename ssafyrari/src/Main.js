@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+// import Firebase from "./Firebase";
 
 function Main() {
+  // console.log(Firebase)
   return (
     <div>
       <Link to={"/taxi"}>
