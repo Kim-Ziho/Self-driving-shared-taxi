@@ -284,6 +284,12 @@ _gtest_INCLUDES:FILEPATH=/usr/include/gtest/gtest.h
 //Path to a file.
 _gtest_SOURCES:FILEPATH=/usr/src/gtest/src/gtest.cc
 
+//Value Computed by CMake
+beginner_tutorials_BINARY_DIR:STATIC=/home/baek/c108/catkin_ws/build/beginner_tutorials
+
+//Value Computed by CMake
+beginner_tutorials_SOURCE_DIR:STATIC=/home/baek/c108/catkin_ws/src/beginner_tutorials
+
 //The directory containing a CMake configuration file for catkin.
 catkin_DIR:PATH=/opt/ros/melodic/share/catkin/cmake
 
@@ -388,25 +394,31 @@ rospy_DIR:PATH=/opt/ros/melodic/share/rospy/cmake
 rostime_DIR:PATH=/opt/ros/melodic/share/rostime/cmake
 
 //Value Computed by CMake
-ssafy_1_BINARY_DIR:STATIC=/home/baek/c108/catkin_ws/build/ssafy_ad/ssafy_1
+ssafy_1_BINARY_DIR:STATIC=/home/baek/c108/catkin_ws/build/ssafy_1
 
 //Value Computed by CMake
-ssafy_1_SOURCE_DIR:STATIC=/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_1
+ssafy_1_SOURCE_DIR:STATIC=/home/baek/c108/catkin_ws/src/ssafy_1
 
 //Value Computed by CMake
-ssafy_2_BINARY_DIR:STATIC=/home/baek/c108/catkin_ws/build/ssafy_ad/ssafy_2
+ssafy_2_BINARY_DIR:STATIC=/home/baek/c108/catkin_ws/build/ssafy_2
 
 //Value Computed by CMake
-ssafy_2_SOURCE_DIR:STATIC=/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_2
+ssafy_2_SOURCE_DIR:STATIC=/home/baek/c108/catkin_ws/src/ssafy_2
 
 //Value Computed by CMake
-ssafy_3_BINARY_DIR:STATIC=/home/baek/c108/catkin_ws/build/ssafy_ad/ssafy_3
+ssafy_3_BINARY_DIR:STATIC=/home/baek/c108/catkin_ws/build/ssafy_3
 
 //Value Computed by CMake
-ssafy_3_SOURCE_DIR:STATIC=/home/baek/c108/catkin_ws/src/ssafy_ad/ssafy_3
+ssafy_3_SOURCE_DIR:STATIC=/home/baek/c108/catkin_ws/src/ssafy_3
 
 //The directory containing a CMake configuration file for std_msgs.
 std_msgs_DIR:PATH=/opt/ros/melodic/share/std_msgs/cmake
+
+//Value Computed by CMake
+test_BINARY_DIR:STATIC=/home/baek/c108/catkin_ws/build/test
+
+//Value Computed by CMake
+test_SOURCE_DIR:STATIC=/home/baek/c108/catkin_ws/src/test
 
 
 ########################
@@ -518,7 +530,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=8
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=10
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

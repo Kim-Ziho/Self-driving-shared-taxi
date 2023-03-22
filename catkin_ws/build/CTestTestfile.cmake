@@ -6,6 +6,8 @@
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("gtest")
 subdirs("morai_msgs")
-subdirs("ssafy_ad/ssafy_1")
-subdirs("ssafy_ad/ssafy_2")
-subdirs("ssafy_ad/ssafy_3")
+subdirs("beginner_tutorials")
+subdirs("ssafy_1")
+subdirs("ssafy_2")
+subdirs("ssafy_3")
+subdirs("test")
