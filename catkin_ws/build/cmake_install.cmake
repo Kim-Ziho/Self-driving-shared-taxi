@@ -132,9 +132,11 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/baek/c108/catkin_ws/build/gtest/cmake_install.cmake")
   include("/home/baek/c108/catkin_ws/build/morai_msgs/cmake_install.cmake")
-  include("/home/baek/c108/catkin_ws/build/ssafy_ad/ssafy_1/cmake_install.cmake")
-  include("/home/baek/c108/catkin_ws/build/ssafy_ad/ssafy_2/cmake_install.cmake")
-  include("/home/baek/c108/catkin_ws/build/ssafy_ad/ssafy_3/cmake_install.cmake")
+  include("/home/baek/c108/catkin_ws/build/beginner_tutorials/cmake_install.cmake")
+  include("/home/baek/c108/catkin_ws/build/ssafy_1/cmake_install.cmake")
+  include("/home/baek/c108/catkin_ws/build/ssafy_2/cmake_install.cmake")
+  include("/home/baek/c108/catkin_ws/build/ssafy_3/cmake_install.cmake")
+  include("/home/baek/c108/catkin_ws/build/test/cmake_install.cmake")
 
 endif()
 

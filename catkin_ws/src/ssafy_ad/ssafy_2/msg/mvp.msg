@@ -1,4 +1,0 @@
-float64 longitudei
-float64 latitudei
-float64 longitudeg
-float64 latitudeg
