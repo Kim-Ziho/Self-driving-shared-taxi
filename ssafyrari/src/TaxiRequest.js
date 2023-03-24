@@ -186,6 +186,8 @@ function TaxiRequest() {
         <button onClick={setEndnodeCoor}>도착지로 선택</button>
       </Modal>
 
+      <Link to={"/matching"}><button>matching</button></Link>
+
       <Link to={"/"}>
         <button>홈으로</button>
       </Link>
