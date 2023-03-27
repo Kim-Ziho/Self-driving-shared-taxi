@@ -4,6 +4,8 @@ import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import db from "./Firebase";
 import taxiImg from "./taxi.png"
 
+import './TaxiMatching.css'
+
 const { kakao } = window;
 
 function TaxiMatching() {
@@ -78,7 +80,7 @@ function TaxiMatching() {
       image : taxiImage
     })
 
-    var pathdata
+    // var pathdata
 
 
   }, 100);
