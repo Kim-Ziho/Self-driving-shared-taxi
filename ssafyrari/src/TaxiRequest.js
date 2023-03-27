@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Modal from "react-modal";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import db from "./Firebase";
+import "./TaxiRequest.css";
 
 function TaxiRequest() {
   const [initnode, setInitnode] = useState("");
@@ -58,32 +59,33 @@ function TaxiRequest() {
   Modal.setAppElement(appElement);
 
   return (
-    <div>
-      <span>출발위치 : </span>
+    <div className="Request">
+      <span className="span_request">출발위치 </span>
       {initnode ? (
         <div>
           {" "}
           {initnode} <button onClick={changeInitModal}>출발지 변경</button>{" "}
         </div>
       ) : (
-        <button onClick={changeInitModal}>출발지 선택</button>
+        <button className="select_request" onClick={changeInitModal}>출발지 선택</button>
       )}
 
       <br></br>
-      <span>도착위치 : </span>
+      <span className="span_request">도착위치 </span>
       {endnode ? (
         <div>
           {" "}
           {endnode} <button onClick={changeEndModal}>도착지 변경</button>{" "}
         </div>
       ) : (
-        <button onClick={changeEndModal}>도착지 선택</button>
+        <button className="select_request" onClick={changeEndModal}>도착지 선택</button>
       )}
       <br></br>
       <br></br>
       <button onClick={callTaxi}>택시호출</button>
 
       <Modal
+        className="modal_request"
         isOpen={initmodalState}
         onAfterOpen={() => {
           // console.log(initnode);
@@ -186,7 +188,9 @@ function TaxiRequest() {
         <button onClick={setEndnodeCoor}>도착지로 선택</button>
       </Modal>
 
-      <Link to={"/matching"}><button>matching</button></Link>
+      <Link to={"/matching"}>
+        <button>matching</button>
+      </Link>
 
       <Link to={"/"}>
         <button>홈으로</button>
