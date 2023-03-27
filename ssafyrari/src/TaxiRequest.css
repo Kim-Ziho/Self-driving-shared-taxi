@@ -1,0 +1,31 @@
+.span_request {
+    color : white;
+    font-family: "S-CoreDream-7";
+    font-size: 1.5rem;
+}
+
+.Request{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.select_request{
+    background-color: yellow;
+    border-radius: 7px;
+    width : 250px;
+    height: 50px;
+    color: black;
+    font-family: "S-CoreDream-3";
+    font-size : 1.5rem;
+}
+
+.modal_request{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color:black;
+    height:75vh;
+    width: 75vw;
+}
