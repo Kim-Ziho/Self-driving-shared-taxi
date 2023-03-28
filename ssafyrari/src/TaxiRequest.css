@@ -1,7 +1,26 @@
 .span_request {
     color : white;
+    font-family: "S-CoreDream-3";
+    font-size: 1.2rem;
+}
+
+.p_request {
+    color : white;
     font-family: "S-CoreDream-7";
     font-size: 1.5rem;
+}
+
+.home_request{
+    margin: 10px;
+    padding-right:380px;
+}
+
+.back_request{
+    color: white;
+    background-color: black;
+    border:none;
+    /* border-radius: 50px; */
+    font-size: 1rem;
 }
 
 .Request{
@@ -18,6 +37,31 @@
     color: black;
     font-family: "S-CoreDream-3";
     font-size : 1.5rem;
+    margin:20px;
+}
+
+.call_request{
+    background-color: yellow;
+    border-radius: 7px;
+    width : 150px;
+    height: 50px;
+    color: black;
+    font-family: "S-CoreDream-3";
+    font-size : 1.5rem;
+    margin:20px;
+}
+
+.close_button_request{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.close_request{
+    color: white;
+    background-color: black;
+    border:none;
+    /* border-radius: 50px; */
+    font-size: 2rem;
 }
 
 .modal_request{
@@ -28,4 +72,28 @@
     background-color:black;
     height:75vh;
     width: 75vw;
+}
+
+.modal_span_request{
+    color : white;
+    font-family: "S-CoreDream-4";
+    font-size: 1.5rem;
+
+}
+
+.modal_div_request{
+    display:flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.modal_div_request > button {
+    justify-content: end;
+}
+
+.Node_request{
+    /* color:white; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
