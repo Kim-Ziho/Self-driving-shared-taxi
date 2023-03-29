@@ -18,6 +18,8 @@ function TaxiRequest() {
   ]);
   const [initmodalState, setInitModalState] = useState(false);
   const [endmodalState, setEndModalState] = useState(false);
+  const [initnodeAddress, setInitNodeAddress] = useState(false);
+  const [endnodeAddress, setEndNodeAddress] = useState(false);
   // let initnode = ''
   // let endnode = ''
   //   setInitnode('');
@@ -60,29 +62,47 @@ function TaxiRequest() {
 
   return (
     <div className="Request">
-      <span className="span_request">출발위치 </span>
-      {initnode ? (
-        <div>
-          {" "}
-          {initnode} <button onClick={changeInitModal}>출발지 변경</button>{" "}
-        </div>
-      ) : (
-        <button className="select_request" onClick={changeInitModal}>출발지 선택</button>
-      )}
+      <div className="home_request">
+        <Link to={"/"}>
+          <button className="back_request">Back</button>
+        </Link>
+      </div>
+      <span className="p_request">출발위치 </span>
+      <br></br>
+      <div>
+        {initnode ? (
+          <div className="Node_request">
+            <span className="span_request">{initnodeAddress}</span>{" "}
+            <button className="select_request" onClick={changeInitModal}>
+              출발지 변경
+            </button>
+          </div>
+        ) : (
+          <button className="select_request" onClick={changeInitModal}>
+            출발지 선택
+          </button>
+        )}
+      </div>
 
       <br></br>
-      <span className="span_request">도착위치 </span>
-      {endnode ? (
-        <div>
-          {" "}
-          {endnode} <button onClick={changeEndModal}>도착지 변경</button>{" "}
-        </div>
-      ) : (
-        <button className="select_request" onClick={changeEndModal}>도착지 선택</button>
-      )}
+      <span className="p_request">도착위치 </span>
+      <br></br>
+      <div>
+        {endnode ? (
+          <div className="Node_request">
+            <span className="span_request">{endnodeAddress}</span>{" "}
+            <button className="select_request" onClick={changeEndModal}>
+              도착지 변경
+            </button>
+          </div>
+        ) : (
+          <button className="select_request" onClick={changeEndModal}>
+            도착지 선택
+          </button>
+        )}
+      </div>
       <br></br>
       <br></br>
-      <button onClick={callTaxi}>택시호출</button>
 
       <Modal
         className="modal_request"
@@ -90,10 +110,11 @@ function TaxiRequest() {
         onAfterOpen={() => {
           // console.log(initnode);
           // console.log(11);
+          var geocoder = new kakao.maps.services.Geocoder();
           var mapContainer = document.getElementById("map"),
             mapOption = {
               center: new kakao.maps.LatLng(initcoor[0], initcoor[1]),
-              level: 4,
+              level: 2,
               mapTypeId: kakao.maps.MapTypeId.ROADMAP,
               draggable: true,
             };
@@ -124,27 +145,43 @@ function TaxiRequest() {
             );
             setInitcoor([latlng.getLat(), latlng.getLng()]);
           });
+
+          var coord = new kakao.maps.LatLng(initcoor[0], initcoor[1]);
+          var callback = function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+              console.log(setInitNodeAddress(result[0].address.address_name));
+            }
+          };
+
+          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
         }}
       >
-        <div>
-          <span>출발지 설정</span>
-          <button onClick={changeInitModal}>닫기</button>
+        <div className="close_button_request">
+          <button className="close_request" onClick={changeInitModal}>
+            ×
+          </button>
         </div>
-        <div id="map" style={{ width: "auto", height: 200 }}></div>
+        <div className="modal_div_request">
+          <span className="modal_span_request">출발지 설정</span>
+        </div>
+        <div id="map" style={{ width: "auto", height: 400 }}></div>
         <br></br>
-        <button onClick={setInitnodeCoor}>출발지로 선택</button>
+        <div className="modal_div_request">
+          <button className="select_request" onClick={setInitnodeCoor}>
+            출발지로 선택
+          </button>
+        </div>
       </Modal>
 
       <Modal
+        className="modal_request"
         isOpen={endmodalState}
         onAfterOpen={() => {
-          if (!endnode) {
-            setInitcoor([37.582918740973305, 126.88875664944605]);
-          }
+          var geocoder = new kakao.maps.services.Geocoder();
           var mapContainer = document.getElementById("map2"),
             mapOption = {
               center: new kakao.maps.LatLng(endcoor[0], endcoor[1]),
-              level: 4,
+              level: 2,
               mapTypeId: kakao.maps.MapTypeId.ROADMAP,
               draggable: true,
             };
@@ -177,24 +214,42 @@ function TaxiRequest() {
             );
             setEndcoor([latlng.getLat(), latlng.getLng()]);
           });
+          var coord = new kakao.maps.LatLng(endcoor[0], endcoor[1]);
+          var callback = function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+              console.log(setEndNodeAddress(result[0].address.address_name));
+            }
+          };
+
+          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
         }}
       >
-        <div>
-          <span>도착지 설정</span>
-          <button onClick={changeEndModal}>닫기</button>
+        <div className="close_button_request">
+          <button className="close_request" onClick={changeEndModal}>
+            ×
+          </button>
         </div>
-        <div id="map2" style={{ width: "auto", height: 200 }}></div>
+        <div className="modal_div_request">
+          <span className="modal_span_request">도착지 설정</span>
+        </div>
+        <div id="map2" style={{ width: "auto", height: 400 }}></div>
         <br></br>
-        <button onClick={setEndnodeCoor}>도착지로 선택</button>
+        <div className="modal_div_request">
+          <button className="select_request" onClick={setEndnodeCoor}>
+            도착지로 선택
+          </button>
+        </div>
       </Modal>
 
-      <Link to={"/matching"}>
+      {/* <Link to={"/matching"}>
         <button>matching</button>
-      </Link>
+      </Link> */}
 
-      <Link to={"/"}>
-        <button>홈으로</button>
-      </Link>
+      <div>
+        <button className="call_request" onClick={callTaxi}>
+          택시호출
+        </button>
+      </div>
     </div>
   );
 }
