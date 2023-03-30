@@ -1,48 +1,95 @@
 // eslint-disable-next-line no-unused-vars
 /*global kakao*/
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import db from "./Firebase";
 import "./TaxiRequest.css";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import SearchResult from "./SearchResult";
 
 function TaxiRequest() {
-  const [initnode, setInitnode] = useState("");
-  const [endnode, setEndnode] = useState("");
+  // const [initnode, setInitnode] = useState("");
+  // const [endnode, setEndnode] = useState("");
   const [initcoor, setInitcoor] = useState([
-    37.582918740973305, 126.88875664944605,
+    37.58068685171595, 126.8858969261291,
   ]);
   const [endcoor, setEndcoor] = useState([
     37.582918740973305, 126.88875664944605,
   ]);
   const [initmodalState, setInitModalState] = useState(false);
+  const [searchmodalState, setSearchModalState] = useState(false);
   const [endmodalState, setEndModalState] = useState(false);
   const [initnodeAddress, setInitNodeAddress] = useState(false);
   const [endnodeAddress, setEndNodeAddress] = useState(false);
+  const [searchResult, setSearchResult] = useState([]);
+  const [selectedPosition, setSelectedPosition] = useState([]);
   // let initnode = ''
   // let endnode = ''
   //   setInitnode('');
   //   setEndnode('');
   // const hello = 'hello'
 
+  const [searchWord, setSearchWord] = useState("");
+
   const { kakao } = window;
+
+  var geocoder = new kakao.maps.services.Geocoder();
 
   function changeInitModal() {
     setInitModalState(!initmodalState);
+  }
+
+  const onChange = (e) => {
+    setSearchWord(e.target.value);
+  };
+
+  // const onReset = ()=>{
+  //   setSearchWord("")
+  // }
+
+  function searchFunc() {
+    axios
+      .get(
+        `https://business.juso.go.kr/addrlink/addrLinkApi.do?currentPage=1&countPerPage=10&keyword=${searchWord}&confmKey=devU01TX0FVVEgyMDIzMDMzMDExMDY1MzExMzY0MTg=&resultType=json&firstSort=(road:'서울')`
+      )
+      .then((res) => {
+        // console.log("result", res);
+        // console.log("axios", res.data);
+        // console.log("data.result", res.data.results);
+        setSearchResult(res.data.results.juso);
+        console.log("data", searchResult);
+      });
+    // axios.get(`https://dapi.kakao.com/v2/local/search/address.json?query=${searchWord}`,{ headers:{'Authorization':'KakaoAK 3175478cb4c3aca8366273adba569b14'}})
+    // .then(res =>{
+    //   console.log('asdf',searchWord);
+    //   console.log(res.data);
+    // })
+    // setSearchWord("")
   }
 
   function changeEndModal() {
     setEndModalState(!endmodalState);
   }
 
+  function changeSearchModal() {
+    setSearchModalState(!searchmodalState);
+  }
+
   function setInitnodeCoor() {
-    setInitnode(initcoor);
+    // setInitnode(initcoor);
     setInitModalState(false);
+  }
+  function reSearch() {
+    setEndModalState(false);
+    setSearchModalState(!searchmodalState);
   }
 
   function setEndnodeCoor() {
-    setEndnode(endcoor);
+    // setEndnode(endcoor);
     setEndModalState(false);
   }
 
@@ -60,6 +107,23 @@ function TaxiRequest() {
 
   Modal.setAppElement(appElement);
 
+  const selected = (data) => {
+    setSelectedPosition(data);
+    setSearchModalState(!searchmodalState);
+    setEndModalState(!endmodalState);
+  };
+
+  useEffect(() => {
+    var coord = new kakao.maps.LatLng(initcoor[0], initcoor[1]);
+    var callback = function (result, status) {
+      if (status === kakao.maps.services.Status.OK) {
+        setInitNodeAddress(result[0].address.address_name);
+      }
+    };
+
+    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+  });
+
   return (
     <div className="Request">
       <div className="home_request">
@@ -70,7 +134,7 @@ function TaxiRequest() {
       <span className="p_request">출발위치 </span>
       <br></br>
       <div>
-        {initnode ? (
+        {initcoor ? (
           <div className="Node_request">
             <span className="span_request">{initnodeAddress}</span>{" "}
             <button className="select_request" onClick={changeInitModal}>
@@ -88,7 +152,7 @@ function TaxiRequest() {
       <span className="p_request">도착위치 </span>
       <br></br>
       <div>
-        {endnode ? (
+        {endnodeAddress ? (
           <div className="Node_request">
             <span className="span_request">{endnodeAddress}</span>{" "}
             <button className="select_request" onClick={changeEndModal}>
@@ -96,7 +160,7 @@ function TaxiRequest() {
             </button>
           </div>
         ) : (
-          <button className="select_request" onClick={changeEndModal}>
+          <button className="select_request" onClick={changeSearchModal}>
             도착지 선택
           </button>
         )}
@@ -110,7 +174,6 @@ function TaxiRequest() {
         onAfterOpen={() => {
           // console.log(initnode);
           // console.log(11);
-          var geocoder = new kakao.maps.services.Geocoder();
           var mapContainer = document.getElementById("map"),
             mapOption = {
               center: new kakao.maps.LatLng(initcoor[0], initcoor[1]),
@@ -149,7 +212,7 @@ function TaxiRequest() {
           var coord = new kakao.maps.LatLng(initcoor[0], initcoor[1]);
           var callback = function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
-              console.log(setInitNodeAddress(result[0].address.address_name));
+              setInitNodeAddress(result[0].address.address_name);
             }
           };
 
@@ -173,55 +236,115 @@ function TaxiRequest() {
         </div>
       </Modal>
 
+      <Modal className="modal_request" isOpen={searchmodalState}>
+        <div className="close_button_request">
+          <button className="close_request" onClick={changeSearchModal}>
+            ×
+          </button>
+        </div>
+        <div className="modal_div_request">
+          <span className="modal_span_request">도착지 설정</span>
+        </div>
+        <div>
+          <div className="input_div">
+            <input
+              className="input_request"
+              name="searchWord"
+              placeholder="검색할 위치를 입력해주세요."
+              onChange={onChange}
+              value={searchWord}
+            ></input>
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              style={{ color: "#ffffff" }}
+              onClick={searchFunc}
+            />
+          </div>
+          <SearchResult result={searchResult} selected={selected} />
+        </div>
+
+        <br></br>
+
+        {/* <div className="modal_div_request">
+          <button className="select_request" onClick={setEndnodeCoor}>
+            도착지로 선택
+          </button>
+        </div> */}
+      </Modal>
+
       <Modal
         className="modal_request"
         isOpen={endmodalState}
         onAfterOpen={() => {
-          var geocoder = new kakao.maps.services.Geocoder();
-          var mapContainer = document.getElementById("map2"),
-            mapOption = {
-              center: new kakao.maps.LatLng(endcoor[0], endcoor[1]),
-              level: 2,
-              mapTypeId: kakao.maps.MapTypeId.ROADMAP,
-              draggable: true,
-            };
-          var map2 = new kakao.maps.Map(mapContainer, mapOption);
+          axios
+            .get(
+              `https://dapi.kakao.com/v2/local/search/address.json?query=${selectedPosition.roadAddr}`,
+              {
+                headers: {
+                  Authorization: "KakaoAK 3175478cb4c3aca8366273adba569b14",
+                },
+              }
+            )
+            .then((res) => {
+              // console.log("asdf", searchWord);
 
-          var arriveSrc =
-            "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/blue_b.png";
-          var arriveSize = new kakao.maps.Size(50, 45);
-          var arriveOption = {
-            offset: new kakao.maps.Point(15, 43),
-          };
+              console.log(selectedPosition);
+              console.log("a", res.data);
+              setEndcoor([res.data.documents[0].y, res.data.documents[0].x]);
+              var geocoder = new kakao.maps.services.Geocoder();
+              var mapContainer = document.getElementById("map2"),
+                mapOption = {
+                  center: new kakao.maps.LatLng(
+                    res.data.documents[0].y,
+                    res.data.documents[0].x
+                  ),
+                  level: 2,
+                  mapTypeId: kakao.maps.MapTypeId.ROADMAP,
+                  draggable: true,
+                };
+              var map2 = new kakao.maps.Map(mapContainer, mapOption);
 
-          var arriveImage = new kakao.maps.MarkerImage(
-            arriveSrc,
-            arriveSize,
-            arriveOption
-          );
+              var arriveSrc =
+                "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/blue_b.png";
+              var arriveSize = new kakao.maps.Size(50, 45);
+              var arriveOption = {
+                offset: new kakao.maps.Point(15, 43),
+              };
 
-          var arrivePosition = new kakao.maps.LatLng(endcoor[0], endcoor[1]);
-          var arriveMarker = new kakao.maps.Marker({
-            map: map2,
-            position: arrivePosition,
-            image: arriveImage,
-          });
-          kakao.maps.event.addListener(map2, "center_changed", function () {
-            var latlng = map2.getCenter();
+              var arriveImage = new kakao.maps.MarkerImage(
+                arriveSrc,
+                arriveSize,
+                arriveOption
+              );
 
-            arriveMarker.setPosition(
-              new kakao.maps.LatLng(latlng.getLat(), latlng.getLng())
-            );
-            setEndcoor([latlng.getLat(), latlng.getLng()]);
-          });
-          var coord = new kakao.maps.LatLng(endcoor[0], endcoor[1]);
-          var callback = function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-              console.log(setEndNodeAddress(result[0].address.address_name));
-            }
-          };
+              var arrivePosition = new kakao.maps.LatLng(
+                res.data.documents[0].y,
+                res.data.documents[0].x
+              );
+              var arriveMarker = new kakao.maps.Marker({
+                map: map2,
+                position: arrivePosition,
+                image: arriveImage,
+              });
+              kakao.maps.event.addListener(map2, "center_changed", function () {
+                var latlng = map2.getCenter();
 
-          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+                arriveMarker.setPosition(
+                  new kakao.maps.LatLng(latlng.getLat(), latlng.getLng())
+                );
+                setEndcoor([latlng.getLat(), latlng.getLng()]);
+              });
+              var coord = new kakao.maps.LatLng(endcoor[0], endcoor[1]);
+              var callback = function (result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                  console.log(
+                    setEndNodeAddress(result[0].address.address_name)
+                  );
+                }
+              };
+
+              geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+            });
         }}
       >
         <div className="close_button_request">
@@ -232,11 +355,19 @@ function TaxiRequest() {
         <div className="modal_div_request">
           <span className="modal_span_request">도착지 설정</span>
         </div>
-        <div id="map2" style={{ width: "auto", height: 400 }}></div>
+
+        <div
+          id="map2"
+          className="map2_request"
+          style={{ width: "auto", height: 370 }}
+        ></div>
         <br></br>
         <div className="modal_div_request">
+          <button className="select_request" onClick={reSearch}>
+            다시 검색
+          </button>
           <button className="select_request" onClick={setEndnodeCoor}>
-            도착지로 선택
+            선택 완료
           </button>
         </div>
       </Modal>

@@ -4,6 +4,22 @@
     font-size: 1.2rem;
 }
 
+.input_request {
+    border:none;
+    height:30px;
+    width:100%;
+    background-color: black;
+    color : white;
+    padding-left: 10px;
+}
+
+.input_div{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 10px;
+}
+
 .p_request {
     color : white;
     font-family: "S-CoreDream-7";
@@ -12,7 +28,8 @@
 
 .home_request{
     margin: 10px;
-    padding-right:380px;
+    padding-right:350px;
+    padding-top : 10px;
 }
 
 .back_request{
@@ -96,4 +113,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.map2_request{
+    width: "auto";
+    height: 370;
+}
+
+.searchResult_request{
+    color: white;
 }
