@@ -1,7 +1,7 @@
 /*global kakao*/
 import React, { useState, useEffect, useRef } from "react";
 import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
-import db from "./Firebase";
+import {db} from "./Firebase";
 import taxiImg from "./taxi.png"
 
 import './TaxiMatching.css'

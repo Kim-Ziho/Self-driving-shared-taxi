@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
 import { setDoc, doc } from "firebase/firestore";
-import db from "./Firebase";
+import { db } from "./Firebase";
 import "./TaxiRequest.css";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
