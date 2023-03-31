@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 /*global kakao*/
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "./Firebase";
@@ -32,6 +32,8 @@ function TaxiRequest() {
   //   setInitnode('');
   //   setEndnode('');
   // const hello = 'hello'
+
+  const navigate = useNavigate()
 
   const [searchWord, setSearchWord] = useState("");
 
@@ -94,13 +96,16 @@ function TaxiRequest() {
   }
 
   function callTaxi() {
-    const docRef = setDoc(doc(db, "User", "User1"), {
-      Initnode_lat: initcoor[0],
-      Initnode_lng: initcoor[1],
-      Endnode_lat: endcoor[0],
-      Endnode_lng: endcoor[1],
-    });
-    console.log("Document written with ID: ", docRef.id);
+    // const docRef = setDoc(doc(db, "User", "User1"), {
+    //   Initnode_lat: initcoor[0],
+    //   Initnode_lng: initcoor[1],
+    //   Endnode_lat: endcoor[0],
+    //   Endnode_lng: endcoor[1],
+    // });
+
+    navigate('/matching')
+  
+    // console.log("Document written with ID: ", docRef.id);
   }
 
   const appElement = document.getElementById("root");
