@@ -3,8 +3,9 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Main from "./Main";
-import TaxiRequest from "./TaxiRequest"
-import TaxiMatching from "./TaxiMatching"
+import TaxiRequest from "./TaxiRequest";
+import TaxiMatched from "./TaxiMatched";
+import TaxiMatching from "./TaxiMatching";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />}></Route>
           <Route path="/taxi" element={<TaxiRequest />}></Route>
+          <Route path="/matched" element={<TaxiMatched />}></Route>
           <Route path="/matching" element={<TaxiMatching />}></Route>
         </Routes>
       </BrowserRouter>

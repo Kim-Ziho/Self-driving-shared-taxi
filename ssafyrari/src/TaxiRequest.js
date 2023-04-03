@@ -96,12 +96,12 @@ function TaxiRequest() {
   }
 
   function callTaxi() {
-    // const docRef = setDoc(doc(db, "User", "User1"), {
-    //   Initnode_lat: initcoor[0],
-    //   Initnode_lng: initcoor[1],
-    //   Endnode_lat: endcoor[0],
-    //   Endnode_lng: endcoor[1],
-    // });
+    const docRef = setDoc(doc(db, "User", "User1"), {
+      Initnode_lat: initcoor[0],
+      Initnode_lng: initcoor[1],
+      Endnode_lat: endcoor[0],
+      Endnode_lng: endcoor[1],
+    });
 
     navigate("/matching");
 
