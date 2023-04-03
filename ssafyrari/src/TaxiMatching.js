@@ -104,7 +104,7 @@ function TaxiMatching() {
 
     // var pathdata
   }, 10);
-  console.log(1);
+  console.log(1,egoData["current_lat"],egoData["current_lng"]);
 
   return (
     <div id="root">
@@ -114,3 +114,4 @@ function TaxiMatching() {
 }
 
 export default TaxiMatching;
+
