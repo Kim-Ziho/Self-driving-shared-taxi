@@ -25,7 +25,7 @@ function Main() {
     else(
       setUserData('')
     )
-  })
+  },[])
 
   function handleGoogleLogin() {
     const provider = new GoogleAuthProvider(); // provider를 구글로 설정

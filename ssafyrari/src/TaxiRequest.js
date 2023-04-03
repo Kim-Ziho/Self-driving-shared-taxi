@@ -33,7 +33,7 @@ function TaxiRequest() {
   //   setEndnode('');
   // const hello = 'hello'
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [searchWord, setSearchWord] = useState("");
 
@@ -103,8 +103,8 @@ function TaxiRequest() {
        Endnode_lng: endcoor[1],
      });
 
-    navigate('/matching')
-  
+    navigate("/matching");
+
     // console.log("Document written with ID: ", docRef.id);
   }
 
