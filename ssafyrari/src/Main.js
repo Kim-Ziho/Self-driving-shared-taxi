@@ -1,4 +1,4 @@
-import { React, useState,useEffect } from "react";
+import { React, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 // import Firebase from "./Firebase";
 import logo from "./SSAFYRARI_logo.png";
@@ -18,19 +18,15 @@ function Main() {
   const [userData, setUserData] = useState();
   // console.log(userData);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (sessionStorage.length) {
-      setUserData(sessionStorage)
-    }
-    else(
-      setUserData('')
-    )
-  },[])
+      setUserData(sessionStorage);
+    } else setUserData("");
+  }, []);
 
   function handleGoogleLogin() {
     const provider = new GoogleAuthProvider(); // provider를 구글로 설정
     setPersistence(auth, browserSessionPersistence).then(
-
       signInWithPopup(auth, provider) // popup을 이용한 signup
         .then((data) => {
           setUserData(data.user); // user data 설정
@@ -54,7 +50,7 @@ function Main() {
             <button className="call_button">택시호출</button>
           </Link>
 
-          <Link>
+          <Link to={"/sharetaxi"}>
             <button className="call_button">공유택시호출</button>
           </Link>
         </div>
