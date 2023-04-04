@@ -30,7 +30,7 @@ function Main() {
       signInWithPopup(auth, provider) // popup을 이용한 signup
         .then((data) => {
           setUserData(data.user); // user data 설정
-          console.log(data); // console로 들어온 데이터 표시
+          // console.log(data); // console로 들어온 데이터 표시
         })
         .catch((err) => {
           console.log(err);
