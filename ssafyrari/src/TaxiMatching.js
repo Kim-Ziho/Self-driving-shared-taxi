@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { doc, onSnapshot, collection, query, where } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  collection,
+  query,
+  where,
+  setDoc,
+} from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "./Firebase";
 import logo from "./SSAFYRARI_logo.png";
@@ -71,7 +78,10 @@ function TaxiMatching() {
   //   }, 1000);
   // }, []);
   useEffect(() => {
-    const qEgos = query(collection(db, "Ego"));
+    const qEgos = query(
+      collection(db, "Ego"),
+      where("isAvailable", "==", true)
+    );
     onSnapshot(qEgos, (snap) => {
       setEgos(
         snap.docChanges().map((now) => {
@@ -80,7 +90,10 @@ function TaxiMatching() {
         })
       );
     });
-    const qUsers = query(collection(db, "User"));
+    const qUsers = query(
+      collection(db, "User"),
+      where("isAvailable", "==", true)
+    );
     onSnapshot(qUsers, (snap) => {
       setUsers(
         snap.docChanges().map((now) => {
@@ -92,11 +105,37 @@ function TaxiMatching() {
   }, []);
 
   useEffect(() => {
-    const userEmail = window.sessionStorage.getItem(
-      "firebase:authUser:AIzaSyDgvpCxqBJkr7Mqm6yIsLSz_sqsL9xp4IU:[DEFAULT]"
-    )[email];
-    console.log(userEmail);
-  }, []);
+    console.log(1, users, 2, egos);
+    if (egos.length && users.length) {
+      setDoc(
+        doc(db, "Taxi", "Taxi1"),
+        {
+          taxi_Initnode_lat: users[0]["Initnode_lat"],
+          taxi_Initnode_lng: users[0]["Initnode_lng"],
+          taxi_Endnode_lat: users[0]["Endnode_lat"],
+          taxi_Endnode_lng: users[0]["Endnode_lng"],
+        },
+        { merge: true }
+      );
+      setDoc(
+        doc(db, "Ego", "Ego1"),
+        {
+          isAvailable: false,
+        },
+        { merge: true }
+      );
+      setDoc(
+        doc(db, "User", "User1"),
+        {
+          isAvailable: false,
+        },
+        { merge: true }
+      );
+      setTimeout(() => {
+        navigate("/matched");
+      }, 2000);
+    }
+  }, [users, egos]);
 
   return (
     <div>

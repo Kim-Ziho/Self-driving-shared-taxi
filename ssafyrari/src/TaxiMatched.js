@@ -30,7 +30,7 @@ function TaxiMatched() {
 
   setTimeout(() => {
     // console.log(userData, egoData, pathData);
-    if (!kakao.maps) return;
+    // if (!kakao.maps) return;
 
     var mapContainer = document.getElementById("map"),
       mapOption = {

@@ -10,6 +10,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import SearchResult from "./SearchResult";
+import { type } from "@testing-library/user-event/dist/type";
 
 function TaxiRequest() {
   // const [initnode, setInitnode] = useState("");
@@ -20,6 +21,10 @@ function TaxiRequest() {
   const [endcoor, setEndcoor] = useState([
     37.579520675516555, 126.8819363653686,
   ]);
+  const [init2coor, setInit2coor] = useState([37.5733579809, 126.888599361]);
+  const [end2coor, setEnd2coor] = useState([
+    37.579520675516555, 126.8819363653686,
+  ]);
   const [initmodalState, setInitModalState] = useState(false);
   const [searchmodalState, setSearchModalState] = useState(false);
   const [endmodalState, setEndModalState] = useState(false);
@@ -27,6 +32,13 @@ function TaxiRequest() {
   const [endnodeAddress, setEndNodeAddress] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState([]);
+  const [userEmail, setuserEmail] = useState(
+    JSON.parse(
+      window.sessionStorage.getItem(
+        "firebase:authUser:AIzaSyDgvpCxqBJkr7Mqm6yIsLSz_sqsL9xp4IU:[DEFAULT]"
+      )
+    )["email"]
+  );
   // let initnode = ''
   // let endnode = ''
   //   setInitnode('');
@@ -98,12 +110,19 @@ function TaxiRequest() {
   }
 
   function callTaxi() {
-    const docRef = setDoc(doc(db, "User", "User1"), {
-      Initnode_lat: initcoor[0],
-      Initnode_lng: initcoor[1],
-      Endnode_lat: endcoor[0],
-      Endnode_lng: endcoor[1],
-    });
+    userEmail === "cloush24@gmail.com"
+      ? setDoc(doc(db, "User", "User1"), {
+          Initnode_lat: initcoor[0],
+          Initnode_lng: initcoor[1],
+          Endnode_lat: endcoor[0],
+          Endnode_lng: endcoor[1],
+        })
+      : setDoc(doc(db, "User", "User2"), {
+          Initnode_lat: init2coor[0],
+          Initnode_lng: init2coor[1],
+          Endnode_lat: end2coor[0],
+          Endnode_lng: end2coor[1],
+        });
 
     navigate("/matching");
 
@@ -121,7 +140,11 @@ function TaxiRequest() {
   };
 
   useEffect(() => {
-    var coord = new kakao.maps.LatLng(initcoor[0], initcoor[1]);
+    // console.log();
+    var coord =
+      userEmail === "cloush24@gmail.com"
+        ? new kakao.maps.LatLng(initcoor[0], initcoor[1])
+        : new kakao.maps.LatLng(init2coor[0], init2coor[1]);
     var callback = function (result, status) {
       if (status === kakao.maps.services.Status.OK) {
         setInitNodeAddress(result[0].address.address_name);
@@ -183,7 +206,10 @@ function TaxiRequest() {
           // console.log(11);
           var mapContainer = document.getElementById("map"),
             mapOption = {
-              center: new kakao.maps.LatLng(initcoor[0], initcoor[1]),
+              center:
+                userEmail === "cloush24@gmail.com"
+                  ? new kakao.maps.LatLng(initcoor[0], initcoor[1])
+                  : new kakao.maps.LatLng(init2coor[0], init2coor[1]),
               level: 2,
               mapTypeId: kakao.maps.MapTypeId.ROADMAP,
               draggable: true,
@@ -199,7 +225,10 @@ function TaxiRequest() {
             startSize,
             startOption
           );
-          var startPosition = new kakao.maps.LatLng(initcoor[0], initcoor[1]);
+          var startPosition =
+            userEmail === "cloush24@gmail.com"
+              ? new kakao.maps.LatLng(initcoor[0], initcoor[1])
+              : new kakao.maps.LatLng(init2coor[0], init2coor[1]);
           var startMarker = new kakao.maps.Marker({
             map: map,
             position: startPosition,
@@ -213,10 +242,15 @@ function TaxiRequest() {
             startMarker.setPosition(
               new kakao.maps.LatLng(latlng.getLat(), latlng.getLng())
             );
-            setInitcoor([latlng.getLat(), latlng.getLng()]);
+            userEmail === "cloush24@gmail.com"
+              ? setInitcoor([latlng.getLat(), latlng.getLng()])
+              : setInit2coor([latlng.getLat(), latlng.getLng()]);
           });
 
-          var coord = new kakao.maps.LatLng(initcoor[0], initcoor[1]);
+          var coord =
+            userEmail === "cloush24@gmail.com"
+              ? new kakao.maps.LatLng(initcoor[0], initcoor[1])
+              : new kakao.maps.LatLng(init2coor[0], init2coor[1]);
           var callback = function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
               setInitNodeAddress(result[0].address.address_name);
@@ -297,7 +331,12 @@ function TaxiRequest() {
 
               // console.log(selectedPosition);
               // console.log("a", res.data);
-              setEndcoor([res.data.documents[0].y, res.data.documents[0].x]);
+              userEmail === "cloush24@gmail.com"
+                ? setEndcoor([res.data.documents[0].y, res.data.documents[0].x])
+                : setEnd2coor([
+                    res.data.documents[0].y,
+                    res.data.documents[0].x,
+                  ]);
               var geocoder = new kakao.maps.services.Geocoder();
               var mapContainer = document.getElementById("map2"),
                 mapOption = {
@@ -339,9 +378,14 @@ function TaxiRequest() {
                 arriveMarker.setPosition(
                   new kakao.maps.LatLng(latlng.getLat(), latlng.getLng())
                 );
-                setEndcoor([latlng.getLat(), latlng.getLng()]);
+                userEmail === "cloush24@gmail.com"
+                  ? setEndcoor([latlng.getLat(), latlng.getLng()])
+                  : setEnd2coor([latlng.getLat(), latlng.getLng()]);
               });
-              var coord = new kakao.maps.LatLng(endcoor[0], endcoor[1]);
+              var coord =
+                userEmail === "cloush24@gmail.com"
+                  ? new kakao.maps.LatLng(endcoor[0], endcoor[1])
+                  : new kakao.maps.LatLng(end2coor[0], end2coor[1]);
               var callback = function (result, status) {
                 if (status === kakao.maps.services.Status.OK) {
                   console.log(
