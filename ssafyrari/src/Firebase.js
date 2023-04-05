@@ -18,13 +18,22 @@ import { getAuth } from "firebase/auth";
 //   measurementId: "G-CDQGCSDBMY",
 // };
 
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDgvpCxqBJkr7Mqm6yIsLSz_sqsL9xp4IU",
+//   authDomain: "ssafyrari-a5ba6.firebaseapp.com",
+//   projectId: "ssafyrari-a5ba6",
+//   storageBucket: "ssafyrari-a5ba6.appspot.com",
+//   messagingSenderId: "695297315640",
+//   appId: "1:695297315640:web:fb5f9787ad37df726fe7cd",
+// };
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDgvpCxqBJkr7Mqm6yIsLSz_sqsL9xp4IU",
-  authDomain: "ssafyrari-a5ba6.firebaseapp.com",
-  projectId: "ssafyrari-a5ba6",
-  storageBucket: "ssafyrari-a5ba6.appspot.com",
-  messagingSenderId: "695297315640",
-  appId: "1:695297315640:web:fb5f9787ad37df726fe7cd",
+  apiKey: "AIzaSyCfjuE2YywtBQal0LossV-ZZptPOKRFc7Y",
+  authDomain: "ssafyrari-c6dcd.firebaseapp.com",
+  projectId: "ssafyrari-c6dcd",
+  storageBucket: "ssafyrari-c6dcd.appspot.com",
+  messagingSenderId: "743827205394",
+  appId: "1:743827205394:web:6a9c1748fe6f1df0c797cb",
 };
 
 // Initialize Firebase
