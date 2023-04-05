@@ -21,7 +21,7 @@ function TaxiRequest() {
   const [endcoor, setEndcoor] = useState([
     37.579520675516555, 126.8819363653686,
   ]);
-  const [init2coor, setInit2coor] = useState([37.5733579809, 126.888599361]);
+  const [init2coor, setInit2coor] = useState([37.573234265, 126.888496051]);
   const [end2coor, setEnd2coor] = useState([
     37.579520675516555, 126.8819363653686,
   ]);
