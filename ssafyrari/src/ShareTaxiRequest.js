@@ -114,12 +114,14 @@ function TaxiRequest() {
           Initnode_lng: initcoor[1],
           Endnode_lat: endcoor[0],
           Endnode_lng: endcoor[1],
+          isAvailable: true,
         })
       : setDoc(doc(db, "User", "User2"), {
           Initnode_lat: init2coor[0],
           Initnode_lng: init2coor[1],
           Endnode_lat: end2coor[0],
           Endnode_lng: end2coor[1],
+          isAvailable: true,
         });
 
     navigate("/matching");
