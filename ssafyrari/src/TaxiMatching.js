@@ -38,7 +38,11 @@ function TaxiMatching() {
   const [taxi, setTaxi] = useState([]);
   const [users, setUsers] = useState([]);
   const [egos, setEgos] = useState([]);
-  const email = window.sessionStorage.getItem("email");
+  const [userEmail, setuserEmail] = useState(
+    JSON.parse(window.sessionStorage.getItem(window.sessionStorage.key(0)))[
+      "email"
+    ]
+  );
   // 실패한 코드 1
   // useEffect(() => {
   //   const q = query(collection(db, "Ego"), where("isMatched", "==", "false"));
@@ -107,30 +111,42 @@ function TaxiMatching() {
   useEffect(() => {
     console.log(1, users, 2, egos);
     if (egos.length && users.length) {
-      setDoc(
-        doc(db, "Taxi", "Taxi1"),
-        {
-          taxi_Initnode_lat: users[0]["Initnode_lat"],
-          taxi_Initnode_lng: users[0]["Initnode_lng"],
-          taxi_Endnode_lat: users[0]["Endnode_lat"],
-          taxi_Endnode_lng: users[0]["Endnode_lng"],
-        },
-        { merge: true }
-      );
-      setDoc(
-        doc(db, "Ego", "Ego1"),
-        {
-          isAvailable: false,
-        },
-        { merge: true }
-      );
-      setDoc(
-        doc(db, "User", "User1"),
-        {
-          isAvailable: false,
-        },
-        { merge: true }
-      );
+      userEmail === "cloush24@gmail.com"
+        ? setDoc(
+            doc(db, "Taxi", "Taxi1"),
+            {
+              taxi_Initnode_lat: users[0]["Initnode_lat"],
+              taxi_Initnode_lng: users[0]["Initnode_lng"],
+              taxi_Endnode_lat: users[0]["Endnode_lat"],
+              taxi_Endnode_lng: users[0]["Endnode_lng"],
+            },
+            { merge: true }
+          )
+        : setDoc(
+            doc(db, "Taxi", "Taxi1"),
+            {
+              taxi_Init2node_lat: users[0]["Initnode_lat"],
+              taxi_Init2node_lng: users[0]["Initnode_lng"],
+              taxi_End2node_lat: users[0]["Endnode_lat"],
+              taxi_End2node_lng: users[0]["Endnode_lng"],
+            },
+            { merge: true }
+          );
+      userEmail === "cloush24@gmail.com"
+        ? setDoc(
+            doc(db, "User", "User1"),
+            {
+              isAvailable: false,
+            },
+            { merge: true }
+          )
+        : setDoc(
+            doc(db, "User", "User2"),
+            {
+              isAvailable: false,
+            },
+            { merge: true }
+          );
       setTimeout(() => {
         navigate("/matched");
       }, 2000);
