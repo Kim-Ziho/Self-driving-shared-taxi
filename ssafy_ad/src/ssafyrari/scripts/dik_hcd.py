@@ -139,8 +139,8 @@ class dijkstra_path_pub :
         # self.HH=[self.egox,self.egoy]
         self.CC=[self.init_x,self.init_y]
         self.DD=[self.goal_x,self.goal_y]
-        # self.global_data_msg.CC = self.CC
-        self.global_data_msg.CC=[1006,-1684]
+        self.global_data_msg.CC = self.CC
+        # self.global_data_msg.CC=[1006,-1684]
         self.global_data_msg.DD = self.DD
         self.CC_pre = self.CC[::]
 
@@ -148,13 +148,16 @@ class dijkstra_path_pub :
         while not rospy.is_shutdown():
             #TODO: (11) dijkstra 이용해 만든 Global Path 정보 Publish
             # dijkstra 이용해 만든 Global Path 메세지 를 전송하는 publisher 를 만든다.
-            RL=Realtime_listener()
-            self.init_callback(RL.data)
-            self.goal_callback(RL.data)
+            RL2=Realtime_listener2()
+            print('저기냐?')
+            if RL2.data:
+                print('여기냐?')
+                self.init_callback(RL2.data)
+                self.goal_callback(RL2.data)
 
-            if (self.CC_pre[0] != self.init_x) and (self.CC_pre[1] != self.init_y):
-                self.CC=[self.init_x,self.init_y]
-                self.CC_pre = self.CC[::]
+            # if (self.CC_pre[0] != self.init_x) and (self.CC_pre[1] != self.init_y):
+            #     self.CC=[self.init_x,self.init_y]
+            #     self.CC_pre = self.CC[::]
                 dis = float('inf')
                 for node_idx in self.global_data_msg.nodes_idx2:
                     x, y, z = self.nodes[node_idx].point
@@ -169,8 +172,8 @@ class dijkstra_path_pub :
 
                 self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(self.nodex,self.nodey),self.node_find(self.init_x,self.init_y))
                 self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x,self.goal_y))
-                self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(536,-1123)) #출1->출2
-                self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(536,-1123),self.node_find(-66,-432)) #출2->도2
+                # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(536,-1123)) #출1->출2
+                # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(536,-1123),self.node_find(-66,-432)) #출2->도2
 
                 self.global_data_msg.nodes_idx1 = path1["node_path"]
                 self.global_data_msg.links_idx1 = path1["link_path"]
@@ -498,6 +501,10 @@ class Realtime_listener:
         self.check_time = read_time
 
         callback_done.set()
+class Realtime_listener2:
+    def __init__(self):
+        user_ref = db.collection(u'User').document(u'User2').get().to_dict() if db.collection(u'User').document(u'User2').get().to_dict() else []
+        self.data = user_ref
 
 if __name__ == '__main__':
     

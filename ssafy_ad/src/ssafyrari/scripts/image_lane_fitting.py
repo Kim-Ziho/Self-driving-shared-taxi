@@ -47,12 +47,12 @@ class IMGParser:
         # self.upper_wlane = np.array([30,60,255])
 
         # self.lower_ylane = np.array([0,70,120])# ([0,60,100])
-        # self.upper_ylane = np.array([40,195,230])# ([40,175,255])
-        self.lower_wlane = np.array([ 11,  17, 121])
-        self.upper_wlane = np.array([103,  20, 113])
+        # self.upper_ylane = np.array([40,195,230])# ([40,175,255]) BGR
+        self.lower_wlane = np.array([80,  0,  80])
+        self.upper_wlane = np.array([120, 40, 140])
 
-        self.lower_ylane = np.array([22, 85, 87])# ([0,60,100])
-        self.upper_ylane = np.array( [ 23, 164, 101])# ([40,175,255])
+        self.lower_ylane = np.array([8, 134, 70])# ([0,60,100])
+        self.upper_ylane = np.array([38, 194, 131])# ([40,175,255])
 
 
         self.crop_pts = np.array([[[0,480],[0,350],[280,200],[360,200],[640,350],[640,480]]])
