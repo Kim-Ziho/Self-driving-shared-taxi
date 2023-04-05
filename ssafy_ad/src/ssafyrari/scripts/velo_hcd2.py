@@ -38,11 +38,10 @@ class velo_hcd_pub:
         self.change = 0
         
 
-        rospy.Subscriber("/global_path", Path, self.global_path_callback)
-        rospy.Subscriber("/global_path2", Path, self.global_path_callback2)
+        rospy.Subscriber("/global_path2", Path, self.global_path_callback)
+        rospy.Subscriber("/global_path3", Path, self.global_path_callback2)
         rospy.Subscriber("/global_data", global_data, self.global_data_callback)
         rospy.Subscriber("/odom", Odometry, self.odom_callback)
-        # self.global_path_pub = rospy.Publisher('/global_path',Path, queue_size = 1)
         self.global_data_pub = rospy.Publisher('/global_data2', global_data, queue_size = 1)
         self.is_global_path = False
         self.is_global_path2 = False
@@ -50,12 +49,15 @@ class velo_hcd_pub:
         self.road_friction = 0.8
         self.vel_planning = velocityPlanning(self.target_velocity/3.6, self.road_friction)
 
+        self.global_path_pub = rospy.Publisher('/global_path',Path, queue_size = 1)
+
 
         while True:
             if self.is_global_path == True and self.is_global_path2 == True:
                 self.velocity_list_1 = self.vel_planning.curvedBaseVelocity(self.global_path, 50)
                 self.velocity_list_2 = self.vel_planning.curvedBaseVelocity(self.global_path2, 50)
                 self.velocity_list = self.velocity_list_1
+                self.global_path_msg = self.global_path
                 break
             else:
                 rospy.loginfo('Waiting global path data')
@@ -67,7 +69,7 @@ class velo_hcd_pub:
         self.global_data_msg.nodes_idx = self.global_data.nodes_idx1
         self.global_data_msg.links_idx = self.global_data.links_idx1
 
-        rate = rospy.Rate(5)
+        rate = rospy.Rate(10)
         while not rospy.is_shutdown():
 
             user_dst = ((self.current_position.x - self.global_data.CC[0])**2 + (self.current_position.y - self.global_data.CC[1])**2)**0.5
@@ -79,11 +81,14 @@ class velo_hcd_pub:
                 self.velocity_list = self.velocity_list_2
                 self.global_data_msg.nodes_idx = self.global_data.nodes_idx2
                 self.global_data_msg.links_idx = self.global_data.links_idx2
+                self.global_path_msg = self.global_path2
 
             if self.change != self.global_data.change:  # 출발지가 다르다면 새로운 속도계획 생성 판단을 다익에서 하고 트리거를 걸자
+                print('새로운 승객 탑승')
                 self.velocity_list_1 = self.vel_planning.curvedBaseVelocity(self.global_path, 50)
                 self.velocity_list_2 = self.vel_planning.curvedBaseVelocity(self.global_path2, 50)
                 self.velocity_list = self.velocity_list_1
+                self.global_path_msg = self.global_path
                 self.change = self.global_data.change
 
                 self.global_data_msg.nodes_idx = self.global_data.nodes_idx1
@@ -93,6 +98,7 @@ class velo_hcd_pub:
 
             self.velo_hcd_pub.publish(self.velo_hcd_msg)
             self.global_data_pub.publish(self.global_data_msg)
+            self.global_path_pub.publish(self.global_path_msg)
 
             rate.sleep()
 

@@ -76,15 +76,15 @@ class GPSIMUParser:
         while not rospy.is_shutdown():
             if self.is_imu==True and self.is_gps == True:
                 self.convertLL2UTM()
-                # if self.count==15:
-                #     self.doc_ref.set({
-                #     u'current_lng': u'%s'%self.lon,
-                #     u'current_lat': u'%s'%self.lat,
-                #     u'current_ori_x':u'%s'%self.odom_msg.pose.pose.orientation.x,
-                #     u'current_ori_y':u'%s'%self.odom_msg.pose.pose.orientation.y,
-                #     u'current_ori_z':u'%s'%self.odom_msg.pose.pose.orientation.z,
-                #     },{merge:true})
-                #     self.count=0
+                if self.count==15:
+                    self.doc_ref.set({
+                    u'current_lng': u'%s'%self.lon,
+                    u'current_lat': u'%s'%self.lat,
+                    u'current_ori_x':u'%s'%self.odom_msg.pose.pose.orientation.x,
+                    u'current_ori_y':u'%s'%self.odom_msg.pose.pose.orientation.y,
+                    u'current_ori_z':u'%s'%self.odom_msg.pose.pose.orientation.z,
+                    },{merge:true})
+                    self.count=0
 
                 #TODO: (5) Odometry 메세지 Publish
                 '''

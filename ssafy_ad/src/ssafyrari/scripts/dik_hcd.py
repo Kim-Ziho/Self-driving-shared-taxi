@@ -114,15 +114,15 @@ class dijkstra_path_pub :
         self.global_path_msg = Path()
         self.global_path_msg.header.frame_id = '/map'
         # rospy.loginfo(self.nodes)
-        rospy.loginfo(self.node_find(self.egox,self.egoy))
-        print(self.node_find(1231.2754725448322,-992.5671631838195),self.node_find(1371.3846003052313,-1100.2291121240705))
-        # print(self.node_find(self.init_x,self.init_y))
+        print(self.node_find(self.init_x,self.init_y))
         # TODO 데이터를 담아서
         # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(self.egox,self.egoy),self.node_find(self.init_x,self.init_y))
         # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x,self.goal_y))
 
-        self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1231.2754725448322,-992.5671631838195),self.node_find(1006,-1684)) #현->출1
-        self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(-73,-615)) #출1->도1
+        # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1231.2754725448322,-992.5671631838195),self.node_find(1006,-1684)) #현->출1
+        # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(-73,-615)) #출1->도1
+        self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1231.2754725448322,-992.5671631838195),self.node_find(self.init_x,self.init_y)) #현->출1
+        self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x ,self.goal_y)) #출1->도1
 
         # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(536,-1123)) #출1->출2
         # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(536,-1123),self.node_find(-66,-432)) #출2->도2
@@ -147,9 +147,6 @@ class dijkstra_path_pub :
         while not rospy.is_shutdown():
             #TODO: (11) dijkstra 이용해 만든 Global Path 정보 Publish
             # dijkstra 이용해 만든 Global Path 메세지 를 전송하는 publisher 를 만든다.
-            print('==================1')
-            print(self.init_x,self.init_y)
-            print('==================2')
             RL=Realtime_listener()
             self.init_callback(RL.data)
             self.goal_callback(RL.data)
@@ -188,8 +185,8 @@ class dijkstra_path_pub :
         self.egoy = msg.pose.pose.position.y
 
     def init_callback(self,msg):
-        long = msg['Initnode_lng']
-        lat = msg['Initnode_lat']
+        long = msg['taxi_Initnode_lng']
+        lat = msg['taxi_Initnode_lat']
 
         xy_zone = self.proj_UTM(long, lat)
 
@@ -214,6 +211,7 @@ class dijkstra_path_pub :
         #         start_min_dis=start_dis
         #         self.start_node = node_idx
         self.is_init_pose = True
+
     def node_find(self,x,y):
         min_dis = float('inf')
         for node_idx in self.nodes:
@@ -229,8 +227,8 @@ class dijkstra_path_pub :
         
 
     def goal_callback(self,msg):
-        long = msg['Endnode_lng']
-        lat = msg['Endnode_lat']
+        long = msg['taxi_Endnode_lng']
+        lat = msg['taxi_Endnode_lat']
 
         xy_zone = self.proj_UTM(long, lat)
 
@@ -439,7 +437,7 @@ class Realtime_listener:
         # start realtime listener at doc_Ref
         # doc_watch = doc_ref.on_snapshot(self.on_snapshot)
 
-        user_ref = db.collection(u'User').document(u'User1').get().to_dict() if db.collection(u'User').document(u'User1').get().to_dict() else []
+        user_ref = db.collection(u'Taxi').document(u'Taxi1').get().to_dict() if db.collection(u'Taxi').document(u'Taxi1').get().to_dict() else []
         # ego_ref = db.collection(u'Ego').document(u'Ego1').get().to_dict() if db.collection(u'Ego').document(u'Ego1').get().to_dict() else []
 
 
