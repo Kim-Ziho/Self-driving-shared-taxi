@@ -33,11 +33,9 @@ function TaxiRequest() {
   const [searchResult, setSearchResult] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState([]);
   const [userEmail, setuserEmail] = useState(
-    JSON.parse(
-      window.sessionStorage.getItem(
-        "firebase:authUser:AIzaSyDgvpCxqBJkr7Mqm6yIsLSz_sqsL9xp4IU:[DEFAULT]"
-      )
-    )["email"]
+    JSON.parse(window.sessionStorage.getItem(window.sessionStorage.key(0)))[
+      "email"
+    ]
   );
   // let initnode = ''
   // let endnode = ''
