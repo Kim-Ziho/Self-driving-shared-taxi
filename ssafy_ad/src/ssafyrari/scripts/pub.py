@@ -83,7 +83,8 @@ class GPSIMUParser:
                     u'current_ori_x':u'%s'%self.odom_msg.pose.pose.orientation.x,
                     u'current_ori_y':u'%s'%self.odom_msg.pose.pose.orientation.y,
                     u'current_ori_z':u'%s'%self.odom_msg.pose.pose.orientation.z,
-                    },{merge:true})
+                    
+                    },merge=True)
                     self.count=0
 
                 #TODO: (5) Odometry 메세지 Publish

@@ -115,6 +115,7 @@ class dijkstra_path_pub :
         self.global_path_msg.header.frame_id = '/map'
         # rospy.loginfo(self.nodes)
         print(self.node_find(self.init_x,self.init_y))
+        print(self.node_find(self.goal_x,self.goal_y))
         # TODO 데이터를 담아서
         # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(self.egox,self.egoy),self.node_find(self.init_x,self.init_y))
         # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x,self.goal_y))
@@ -154,8 +155,20 @@ class dijkstra_path_pub :
             if (self.CC_pre[0] != self.init_x) and (self.CC_pre[1] != self.init_y):
                 self.CC=[self.init_x,self.init_y]
                 self.CC_pre = self.CC[::]
-                # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(self.egox,self.egoy),self.node_find(self.init_x,self.init_y))
-                # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x,self.goal_y))
+                dis = float('inf')
+                for node_idx in self.global_data_msg.nodes_idx2:
+                    x, y, z = self.nodes[node_idx].point
+                    temp = ((self.egox - x)**2 + (self.egoy - y)**2)**0.5
+                    if temp < dis:
+                        dis = temp
+                        current_node = node_idx
+                        
+                        self.nodex=x
+                        self.nodey=y
+                print(current_node)
+
+                self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(self.nodex,self.nodey),self.node_find(self.init_x,self.init_y))
+                self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x,self.goal_y))
                 self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(536,-1123)) #출1->출2
                 self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(536,-1123),self.node_find(-66,-432)) #출2->도2
 
@@ -438,6 +451,7 @@ class Realtime_listener:
         # doc_watch = doc_ref.on_snapshot(self.on_snapshot)
 
         user_ref = db.collection(u'Taxi').document(u'Taxi1').get().to_dict() if db.collection(u'Taxi').document(u'Taxi1').get().to_dict() else []
+        
         # ego_ref = db.collection(u'Ego').document(u'Ego1').get().to_dict() if db.collection(u'Ego').document(u'Ego1').get().to_dict() else []
 
 

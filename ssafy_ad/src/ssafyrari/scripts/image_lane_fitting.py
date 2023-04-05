@@ -43,11 +43,17 @@ class IMGParser:
         self.edges = None 
         self.is_status = False
 
-        self.lower_wlane = np.array([0,0,205])
-        self.upper_wlane = np.array([30,60,255])
+        # self.lower_wlane = np.array([0,0,205])
+        # self.upper_wlane = np.array([30,60,255])
 
-        self.lower_ylane = np.array([0,70,120])# ([0,60,100])
-        self.upper_ylane = np.array([40,195,230])# ([40,175,255])
+        # self.lower_ylane = np.array([0,70,120])# ([0,60,100])
+        # self.upper_ylane = np.array([40,195,230])# ([40,175,255])
+        self.lower_wlane = np.array([ 11,  17, 121])
+        self.upper_wlane = np.array([103,  20, 113])
+
+        self.lower_ylane = np.array([22, 85, 87])# ([0,60,100])
+        self.upper_ylane = np.array( [ 23, 164, 101])# ([40,175,255])
+
 
         self.crop_pts = np.array([[[0,480],[0,350],[280,200],[360,200],[640,350],[640,480]]])
 

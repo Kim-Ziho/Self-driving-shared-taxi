@@ -28,7 +28,7 @@ from lib.mgeo.class_defs import *
 # 6. 도로의 곡률 계산
 # 7. 곡률 기반 속도 계획
 # 8. 경로상의 장애물 유무 확인 (차량, 사람, 정지선 신호)
-# 9. 장애물과의 속도와 거리 차이를 이용하여 ACC 를 진행 목표 속도를 설정
+# 9. 장애물과의 속도와 거리 차이를 이용하여 ACC 를 진행 목표 속도를 설정A119AS318409
 # 10. 제어입력 메세지 Publish
 
 #TODO: (0) 필수 학습 지식
@@ -69,13 +69,14 @@ class pure_pursuit :
         self.is_odom = False
         self.is_status = False
         self.is_global_path = False
-        self.pathA,self.pathB = 0,0
+        self.pathA,self.pathB = Path(),Path()
         self.is_look_forward_point = False
 
         self.forward_point = Point()
         self.possible_link_direction = [] # 지금 지나갈 수 있는 링크 속성 (직진, 좌회전, 우회전)
 
         self.global_data=[]
+        self.global_path=[]
         self.vehicle_length = 2.6
         self.lfd = 12
         self.min_lfd = 8
@@ -121,7 +122,7 @@ class pure_pursuit :
         self.adaptive_cruise_control.mrd = 20
 
         while True:
-            if self.is_global_path == True:
+            if self.is_global_path == True and self.global_path != []:
                 break
             else:
                 rospy.loginfo('Waiting global path data')
