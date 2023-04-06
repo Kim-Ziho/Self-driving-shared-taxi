@@ -1,3 +1,4 @@
+
 <launch>
     <node pkg="ssafyrari" type="mgeo_pub.py" name="mgeo_pub"  />
     <!-- <node pkg="ssafyrari" type="gpsimu_parser.py" name="gpsimu_parser" /> -->
@@ -5,10 +6,7 @@
     <!-- <node pkg="ssafyrari" type="mgeo_dijkstra_path_2.py" name="mgeo_dijkstra_path"  /> -->
     <node pkg="ssafyrari" type="pub.py" name="pub" />
     <!-- <node pkg="ssafyrari" type="custom_publish.py" name="custom_publish" /> -->
-    <!-- <node pkg="ssafyrari" type="dijkstra.py" name="dijkstra" /> -->
-    <node pkg="ssafyrari" type="dik_hcd2.py" output="screen" name="dijkstra" />
-    <!-- <node pkg="ssafyrari" type="velo_hcd.py"  name="velo_hcd" /> -->
-    <node pkg="ssafyrari" type="Velo3.py" name="velo_hcd" />
+    <node pkg="ssafyrari" type="dijkstra.py" name="dijkstra" />
     <node pkg="ssafyrari" type="local_path_pub.py" name="local_path_pub" />    
     <node pkg="ssafyrari" type="tf_pub.py" name="tf"  />
     <!-- <node pkg="ssafyrari" type="lattice_planner.py" name="lattice_planner" output="screen" args="/Object_topic"/> -->
@@ -17,7 +15,7 @@
     <!-- <node pkg="ssafyrari" type="ssafyrari_acc.py" output='screen' name="advanced_purepursuit" args="/lane_path" /> -->
     <!-- <node pkg="ssafyrari" type="ssafyrari_acc.py" output='screen' name="advanced_purepursuit"/> -->
     <!-- <node pkg="ssafyrari" type="ssafyrari2_acc.py"  name="advanced_purepursuit" output='screen' /> -->
-    <node pkg="ssafyrari" type="acc_hcd.py"  name="advanced_purepursuit" />
+    <node pkg="ssafyrari" type="final_acc.py" output='screen' name="advanced_purepursuit" />
     <node pkg="ssafyrari" type="image_lane_fitting.py" name="image_lane_fitting"  />
     <node pkg="ssafyrari" type="lidar_velodyne_cluster.py" name="lidar_velodyne_cluster"  />
     <node pkg="ssafyrari" type="lidar_velodyne_cluster_viz.py" name="lidar_velodyne_cluster_viz"  />

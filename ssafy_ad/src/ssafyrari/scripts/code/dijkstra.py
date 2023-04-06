@@ -16,7 +16,7 @@ from firebase_admin import firestore
 from math import cos,sin,sqrt,pow,atan2,pi
 from geometry_msgs.msg import Point32,PoseStamped, PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry,Path
-from ssafyrari.msg import global_data
+from ssafy_3.msg import global_data
 
 current_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(current_path)
@@ -67,13 +67,11 @@ class dijkstra_path_pub :
     def __init__(self):
         rospy.init_node('dijkstra_path_pub', anonymous=True)
         rospy.Subscriber('/odom', Odometry, self.odom_callback)
-        self.global_path_pub = rospy.Publisher('/global_path2',Path, queue_size = 1)
-        self.global_path_pub2 = rospy.Publisher('/global_path3' ,Path, queue_size = 1)
+        self.global_path_pub = rospy.Publisher('/global_path',Path, queue_size = 1)
         self.global_data_pub = rospy.Publisher('/global_data', global_data, queue_size = 1)
         
-        self.change = 0
-        self.egox = 0
-        self.egoy = 0
+        
+
         # rospy.Subscriber('/move_base_simple/goal', PoseStamped, self.goal_callback)
         # rospy.Subscriber('/initialpose', PoseWithCovarianceStamped, self.init_callback)
 
@@ -96,6 +94,7 @@ class dijkstra_path_pub :
         self.is_init_pose = False
 
         
+        
         rate2 = rospy.Rate(1)
         while True:
             RL = Realtime_listener()
@@ -110,95 +109,60 @@ class dijkstra_path_pub :
                 rospy.loginfo('Waiting goal pose data')
                 rospy.loginfo('Waiting init pose data')
             rate2.sleep()
+        self.check_data=RL.data
 
         self.global_path_msg = Path()
         self.global_path_msg.header.frame_id = '/map'
+        self.HCD=[[self.egox,self.egoy],[self.init_x,self.init_y],[self.goal_x,self.goal_y]]
+        # print(self.HCD)
         # rospy.loginfo(self.nodes)
-        print(self.node_find(self.init_x,self.init_y))
-        print(self.node_find(self.goal_x,self.goal_y))
+        rospy.loginfo(self.node_find(self.egox,self.egoy))
+        print(self.node_find(1231.2754725448322,-992.5671631838195),self.node_find(1371.3846003052313,-1100.2291121240705))
+        # print(self.node_find(self.init_x,self.init_y))
         # TODO 데이터를 담아서
         # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(self.egox,self.egoy),self.node_find(self.init_x,self.init_y))
-        # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x,self.goal_y))
 
-        # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1231.2754725448322,-992.5671631838195),self.node_find(1006,-1684)) #현->출1
-        # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(-73,-615)) #출1->도1
-        self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1231.2754725448322,-992.5671631838195),self.node_find(self.init_x,self.init_y)) #현->출1
-        self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x ,self.goal_y)) #출1->도1
-
+        # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(-98,-646)) #출1->도1
+        # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1231.2754725448322,-992.5671631838195),self.node_find(-73,-615)) #현->출1
         # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(536,-1123)) #출1->출2
-        # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(536,-1123),self.node_find(-66,-432)) #출2->도2
-        # self.global_path_msg = self.global_path_msg1
+        self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(536,-1123),self.node_find(-66,-432)) #출2->도2i
 
+        # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x,self.goal_y))
+        self.global_path_msg, path = self.global_path_msg1, path1
         self.global_data_msg = global_data()
-        self.global_data_msg.nodes_idx1 = path1["node_path"]
-        self.global_data_msg.links_idx1 = path1["link_path"]
-        self.global_data_msg.nodes_idx2 = path2["node_path"]
-        self.global_data_msg.links_idx2 = path2["link_path"]
-        self.global_data_msg.change = self.change
-        
-        self.init_node_x, self.init_node_y = self.node_xy_find(self.init_x,self.init_y)
-        self.goal_node_x, self.goal_node_y = self.node_xy_find(self.goal_x,self.goal_y)
-        # self.HH=[self.egox,self.egoy]
-        self.CC=[self.init_node_x, self.init_node_y]
-        self.DD=[self.goal_node_x, self.goal_node_y]
-        # self.global_data_msg.CC=[1006,-1684]
-        self.global_data_msg.CC = self.CC
-        self.global_data_msg.DD = self.DD
-        # self.CC_pre = self.CC[::]
+        self.global_data_msg.nodes_idx = path["node_path"]
+        self.global_data_msg.links_idx = path["link_path"]
 
-        flaggg =True
         rate = rospy.Rate(1) # 10hz
         while not rospy.is_shutdown():
             #TODO: (11) dijkstra 이용해 만든 Global Path 정보 Publish
             # dijkstra 이용해 만든 Global Path 메세지 를 전송하는 publisher 를 만든다.
-            RL2=Realtime_listener2()
-            print('저기냐?')
-            if RL2.data and flaggg:
-                flaggg = False
-                print('-------------------여기냐?-----------------------')
-                self.init2_callback(RL2.data)  # init xy 갱신
-                self.goal2_callback(RL2.data)  # goal xy 갱신
 
-            # if (self.CC_pre[0] != self.init_x) and (self.CC_pre[1] != self.init_y):
-            #     self.CC=[self.init_x,self.init_y]
-            #     self.CC_pre = self.CC[::]
+            RL_c=Realtime_listener()
 
-                dis = float('inf')  ## 택시의 현재 노드
-                for node_idx in self.global_data_msg.nodes_idx2:
-                    x, y, z = self.nodes[node_idx].point
-                    temp = ((self.egox - x)**2 + (self.egoy - y)**2)**0.5
-                    if temp < dis:
-                        dis = temp
-                        current_node = node_idx
-                        
-                        self.nodex=x
-                        self.nodey=y
-                print(current_node)
 
-                self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(self.nodex,self.nodey),self.node_find(self.init_x,self.init_y))
-                self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x,self.goal_y))
-                # self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(1006,-1684),self.node_find(536,-1123)) #출1->출2
-                # self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(536,-1123),self.node_find(-66,-432)) #출2->도2
-                print(self.node_find(self.init_x,self.init_y))
-                print(self.node_find(self.goal_x,self.goal_y))
-                self.global_data_msg.nodes_idx1 = path1["node_path"]
-                self.global_data_msg.links_idx1 = path1["link_path"]
-                self.global_data_msg.nodes_idx2 = path2["node_path"]
-                self.global_data_msg.links_idx2 = path2["link_path"]
+            # if self.check_data!=RL_c.data:
 
-                self.change += 1
-                self.global_data_msg.change = self.change
-                print('----------------------change--------------------')
-                print(self.change)
-                self.init_node_x, self.init_node_y = self.node_xy_find(self.init_x,self.init_y)
-                self.goal_node_x, self.goal_node_y = self.node_xy_find(self.goal_x,self.goal_y)
-                self.global_data_msg.CC=[self.init_node_x, self.init_node_y]
-                self.global_data_msg.DD=[self.goal_node_x, self.goal_node_y]
+            #     self.check_data=RL_c.data
+            #     self.init_callback(RL_c.data)
+            #     self.goal_callback(RL_c.data)
+
+            #     self.global_path_msg = Path()
+            #     self.global_path_msg.header.frame_id = '/map'
+            #     self.HCD=[[self.egox,self.egoy],[self.init_x,self.init_y],[self.goal_x,self.goal_y]]
+                
+            #     # TODO 데이터를 담아서
+            #     self.global_path_msg1, path1 = self.calc_dijkstra_path_node(self.node_find(self.egox,self.egoy),self.node_find(self.init_x,self.init_y))
+            #     self.global_path_msg2, path2 = self.calc_dijkstra_path_node(self.node_find(self.init_x,self.init_y),self.node_find(self.goal_x,self.goal_y))
+            #     self.global_path_msg, path = self.global_path_msg1, path1
+            #     self.global_data_msg = global_data()
+            #     self.global_data_msg.nodes_idx = path["node_path"]
+            #     self.global_data_msg.links_idx = path["link_path"]
+
+
+            self.global_path_pub.publish(self.global_path_msg)
 
             # TODO 전송
-            self.global_path_pub.publish(self.global_path_msg1)
-            self.global_path_pub2.publish(self.global_path_msg2)
-            
             self.global_data_pub.publish(self.global_data_msg)
             
             rate.sleep()
@@ -215,34 +179,6 @@ class dijkstra_path_pub :
         self.egoy = msg.pose.pose.position.y
 
     def init_callback(self,msg):
-        long = msg['taxi_Initnode_lng']
-        lat = msg['taxi_Initnode_lat']
-
-        xy_zone = self.proj_UTM(long, lat)
-
-        # if 문을 이용 예외처리를 하는 이유는 시뮬레이터 음영 구간 설정 센서 데이터가 0.0 으로 나오기 때문이다.
-        if long == 0 and lat == 0:
-            x = 0.0
-            y = 0.0
-        else:
-            x = xy_zone[0] - 313008.55819800857
-            y = xy_zone[1] - 4161698.628368007
-
-        start_min_dis=float('inf')
-        # self.init_msg=msg
-        self.init_x=x
-        self.init_y=y
-
-        # for node_idx in self.nodes:
-        #     node_pose_x=self.nodes[node_idx].point[0]
-        #     node_pose_y=self.nodes[node_idx].point[1]
-        #     start_dis = sqrt(pow(self.init_x - node_pose_x, 2) + pow(self.init_y - node_pose_y, 2))
-        #     if start_dis < start_min_dis :
-        #         start_min_dis=start_dis
-        #         self.start_node = node_idx
-        self.is_init_pose = True
-
-    def init2_callback(self,msg):
         long = msg['Initnode_lng']
         lat = msg['Initnode_lat']
 
@@ -269,7 +205,6 @@ class dijkstra_path_pub :
         #         start_min_dis=start_dis
         #         self.start_node = node_idx
         self.is_init_pose = True
-
     def node_find(self,x,y):
         min_dis = float('inf')
         for node_idx in self.nodes:
@@ -280,56 +215,11 @@ class dijkstra_path_pub :
                 min_dis=start_dis
                 find_node = node_idx
         return find_node
-    
-    def node_xy_find(self,x,y):
-        min_dis = float('inf')
-        for node_idx in self.nodes:
-            node_pose_x=self.nodes[node_idx].point[0]
-            node_pose_y=self.nodes[node_idx].point[1]
-            start_dis = sqrt(pow(x - node_pose_x, 2) + pow(y - node_pose_y, 2))
-            if start_dis < min_dis :
-                min_dis=start_dis
-                find_node = node_idx
-                find_node_x = node_pose_x
-                find_node_y = node_pose_y
-        return find_node_x, find_node_y
         
 
         
 
     def goal_callback(self,msg):
-        long = msg['taxi_Endnode_lng']
-        lat = msg['taxi_Endnode_lat']
-
-        xy_zone = self.proj_UTM(long, lat)
-
-        # if 문을 이용 예외처리를 하는 이유는 시뮬레이터 음영 구간 설정 센서 데이터가 0.0 으로 나오기 때문이다.
-        if long == 0 and lat == 0:
-            x = 0.0
-            y = 0.0
-        else:
-            x = xy_zone[0] - 313008.55819800857
-            y = xy_zone[1] - 4161698.628368007
-
-
-
-
-        goal_min_dis=float('inf')
-        # self.init_msg=msg
-        self.goal_x=x
-        self.goal_y=y
-
-        # for node_idx in self.nodes:
-        #     node_pose_x=self.nodes[node_idx].point[0]
-        #     node_pose_y=self.nodes[node_idx].point[1]
-        #     goal_dis = sqrt(pow(self.goal_x - node_pose_x, 2) + pow(self.goal_y - node_pose_y, 2))
-
-        #     if goal_dis < goal_min_dis :
-        #         goal_min_dis=goal_dis
-        #         self.end_node = node_idx
-
-        self.is_goal_pose = True
-    def goal2_callback(self,msg):
         long = msg['Endnode_lng']
         lat = msg['Endnode_lat']
 
@@ -383,7 +273,7 @@ class dijkstra_path_pub :
 
         # TODO Path와 전역경로상의 노드, 링크, 점의 데이터가 담긴 딕셔너리도 같이 반환
         return (out_path, path)
-    
+
 class Dijkstra:
     def __init__(self, nodes, links):
         self.nodes = nodes
@@ -540,8 +430,7 @@ class Realtime_listener:
         # start realtime listener at doc_Ref
         # doc_watch = doc_ref.on_snapshot(self.on_snapshot)
 
-        user_ref = db.collection(u'Taxi').document(u'Taxi1').get().to_dict() if db.collection(u'Taxi').document(u'Taxi1').get().to_dict() else []
-        
+        user_ref = db.collection(u'User').document(u'User1').get().to_dict() if db.collection(u'User').document(u'User1').get().to_dict() else []
         # ego_ref = db.collection(u'Ego').document(u'Ego1').get().to_dict() if db.collection(u'Ego').document(u'Ego1').get().to_dict() else []
 
 
@@ -588,10 +477,6 @@ class Realtime_listener:
         self.check_time = read_time
 
         callback_done.set()
-class Realtime_listener2:
-    def __init__(self):
-        user_ref = db.collection(u'User').document(u'User2').get().to_dict() if db.collection(u'User').document(u'User2').get().to_dict() else []
-        self.data = user_ref
 
 if __name__ == '__main__':
     
