@@ -7,6 +7,9 @@ import TaxiRequest from "./TaxiRequest";
 import ShareTaxiRequest from "./ShareTaxiRequest";
 import TaxiMatched from "./TaxiMatched";
 import TaxiMatching from "./TaxiMatching";
+import Cookies from "js-cookie";
+
+// 크로스 사이트 요청에서 쿠키를 전송하려면 SameSite=None; Secure
 
 function App() {
   return (
