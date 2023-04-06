@@ -81,7 +81,7 @@ class pure_pursuit :
         self.min_lfd=5
         self.max_lfd=30
         self.lfd_gain = 0.78
-        self.target_velocity = 60
+        self.target_velocity = 30
 
         self.pid = pidControl()
         self.adaptive_cruise_control = AdaptiveCruiseControl(velocity_gain = 0.5, distance_gain = 1, time_gap = 0.8, vehicle_length = 2.7, current_postion=self.current_postion)

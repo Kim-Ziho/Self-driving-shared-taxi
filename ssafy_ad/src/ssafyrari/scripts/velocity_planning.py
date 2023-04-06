@@ -68,7 +68,8 @@ class velo_hcd_pub:
 
         self.global_data_msg.nodes_idx = self.global_data.nodes_idx1
         self.global_data_msg.links_idx = self.global_data.links_idx1
-
+        self.global_data_msg.CC = self.global_data.CC
+        self.global_data_msg.DD = self.global_data.DD
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():
 
@@ -76,7 +77,7 @@ class velo_hcd_pub:
             print(user_dst)
             print(self.current_position.x ,self.current_position.y)
             print( self.global_data.CC[0],  self.global_data.CC[1])
-            if user_dst < 10:
+            if user_dst < 9:
                 print('까깝')
                 self.velocity_list = self.velocity_list_2
                 self.global_data_msg.nodes_idx = self.global_data.nodes_idx2
@@ -93,6 +94,8 @@ class velo_hcd_pub:
 
                 self.global_data_msg.nodes_idx = self.global_data.nodes_idx1
                 self.global_data_msg.links_idx = self.global_data.links_idx1
+                self.global_data_msg.CC = self.global_data.CC
+                self.global_data_msg.DD = self.global_data.DD
 
             self.velo_hcd_msg.velo = self.velocity_list
 

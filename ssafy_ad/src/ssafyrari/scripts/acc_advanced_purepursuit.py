@@ -14,6 +14,7 @@ import tf
 from tf.transformations import euler_from_quaternion,quaternion_from_euler
 from ssafyrari.msg import global_data,Velo
 from lib.mgeo.class_defs import *
+import time
 
 # acc 는 차량의 Adaptive Cruise Control 예제입니다.
 # 차량 경로상의 장애물을 탐색하여 탐색된 차량과의 속도 차이를 계산하여 Cruise Control 을 진행합니다.
@@ -75,7 +76,7 @@ class pure_pursuit :
         self.forward_point = Point()
         self.possible_link_direction = [] # 지금 지나갈 수 있는 링크 속성 (직진, 좌회전, 우회전)
 
-        self.global_data=[]
+        self.global_data=global_data()
         self.global_path=[]
         self.vehicle_length = 2.6
         self.lfd = 12
@@ -128,11 +129,12 @@ class pure_pursuit :
                 rospy.loginfo('Waiting global path data')
 
         while True:
-            if self.global_data != []:
+            print(self.global_data.CC)
+            if self.global_data.CC != ():
                 break
             else:
                 rospy.loginfo('global data ??')
-        
+
         global_traffic_info = [] 
         local_traffic_info = [] 
 
@@ -194,7 +196,7 @@ class pure_pursuit :
                         global_traffic_info = [] 
                         local_traffic_info = [] 
                         self.flags = True
-                        rospy.loginfo("you can go now!!!")
+                        # rospy.loginfo("you can go now!!!")
                         # print(local_npc_info)
                         # print(global_npc_info)
                     elif self.yellow == 4 and next_link_direction == 'straight' :
@@ -226,12 +228,12 @@ class pure_pursuit :
                         global_traffic_info = result2[0] 
                         local_traffic_info = result2[1] 
                         self.flags = False
-                        rospy.loginfo("noooooooooooooooooooo~~")
+                        # rospy.loginfo("noooooooooooooooooooo~~")
 
-                    print(local_traffic_info)
-                    print('------------------')
-                    print(self.adaptive_cruise_control.mrd)
-                    print('------------------')
+                    # print(local_traffic_info)
+                    # print('------------------')
+                    # print(self.adaptive_cruise_control.mrd)
+                    # print('------------------')
 
 
                 self.current_waypoint = self.get_current_waypoint([self.current_position.x,self.current_position.y],self.global_path)
@@ -260,7 +262,26 @@ class pure_pursuit :
                     self.ctrl_cmd_msg.brake = -output
 
                 #TODO: (10) 제어입력 메세지 Publish
+                print(self.current_position.x,self.current_position.y)
+                print(self.global_data.CC)
+                print(self.global_data.DD)
+                user_dst = ((self.current_position.x - self.global_data.CC[0])**2 + (self.current_position.y - self.global_data.CC[1])**2)**0.5
                 
+                if user_dst < 5:
+                    self.ctrl_cmd_msg.accel = 0.0
+                    self.ctrl_cmd_msg.brake = 1.0       
+                    self.ctrl_cmd_pub.publish(self.ctrl_cmd_msg)
+                    time.sleep(3)
+                    self.ctrl_cmd_msg.accel = 0.75
+                    self.ctrl_cmd_msg.brake = 0.0 
+                    self.ctrl_cmd_pub.publish(self.ctrl_cmd_msg)
+                    time.sleep(5)
+
+                user_dst_goal = ((self.current_position.x - self.global_data.DD[0])**2 + (self.current_position.y - self.global_data.DD[1])**2)**0.5
+                if user_dst_goal < 5 :
+                    self.ctrl_cmd_msg.accel = 0.0
+                    self.ctrl_cmd_msg.brake = 1.0       
+
                 # 제어입력 메세지 를 전송하는 publisher 를 만든다.
                 self.ctrl_cmd_pub.publish(self.ctrl_cmd_msg)
 

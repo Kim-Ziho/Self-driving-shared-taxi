@@ -2,11 +2,11 @@
     <node pkg="ssafyrari" type="mgeo_pub.py" name="mgeo_pub"  />
     <node pkg="ssafyrari" type="pub.py" name="pub" />
     <node pkg="ssafyrari" type="dijkstra.py" output="screen" name="dijkstra" />
-    <node pkg="ssafyrari" type="velocity_planning.py" name="velo_hcd" />
+    <node pkg="ssafyrari" type="velocity_planning.py"  name="velo_hcd" />
     <node pkg="ssafyrari" type="local_path_pub.py" name="local_path_pub" />    
     <node pkg="ssafyrari" type="tf_pub.py" name="tf"  />
     <node pkg="ssafyrari" type="lattice_planner.py" name="lattice_planner"  args="/Object_topic_to_lidar"/>
-    <node pkg="ssafyrari" type="acc_advanced_purepursuit.py"  name="advanced_purepursuit" />
+    <node pkg="ssafyrari" type="acc_advanced_purepursuit.py" output="screen" name="advanced_purepursuit" />
     <node pkg="ssafyrari" type="image_lane_fitting.py" name="image_lane_fitting"  />
     <node pkg="ssafyrari" type="lidar_velodyne_cluster.py" name="lidar_velodyne_cluster"  />
     <node pkg="ssafyrari" type="lidar_velodyne_cluster_viz.py" name="lidar_velodyne_cluster_viz"  />
