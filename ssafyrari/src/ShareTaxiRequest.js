@@ -269,7 +269,7 @@ function TaxiRequest() {
           <span className="modal_span_request">출발지 설정</span>
         </div>
         <div id="map" style={{ width: "auto", height: 400 }}></div>
-        <br></br>
+        
         <div className="modal_div_request">
           <button className="select_request" onClick={setInitnodeCoor}>
             출발지로 선택
