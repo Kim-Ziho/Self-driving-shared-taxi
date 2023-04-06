@@ -6,9 +6,9 @@
     <node pkg="ssafyrari" type="pub.py" name="pub" />
     <!-- <node pkg="ssafyrari" type="custom_publish.py" name="custom_publish" /> -->
     <!-- <node pkg="ssafyrari" type="dijkstra.py" name="dijkstra" /> -->
-    <node pkg="ssafyrari" type="dik_hcd.py" output="screen" name="dijkstra" />
+    <node pkg="ssafyrari" type="dik_hcd2.py" output="screen" name="dijkstra" />
     <!-- <node pkg="ssafyrari" type="velo_hcd.py"  name="velo_hcd" /> -->
-    <node pkg="ssafyrari" type="velo_hcd2.py" output="screen" name="velo_hcd" />
+    <node pkg="ssafyrari" type="Velo3.py" name="velo_hcd" />
     <node pkg="ssafyrari" type="local_path_pub.py" name="local_path_pub" />    
     <node pkg="ssafyrari" type="tf_pub.py" name="tf"  />
     <!-- <node pkg="ssafyrari" type="lattice_planner.py" name="lattice_planner" output="screen" args="/Object_topic"/> -->
