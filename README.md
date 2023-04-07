@@ -1,32 +1,114 @@
-# 🚕싸삐라리 Git Convention!!🚕
-## 🚗Sub1🚗
+# Readme
 
-### 🚖 각 팀원들 이니셜이 들어간 Git-Flow 생성  
-ex) master_sh | develop_sh | hotfix _sh | feat/IMU_sh | release_sh
-1. Git-Flow 지켜서 개발하기!
-2. 모르는건 물어보기!
-3. 다른 사람들 branch 건들지 않기!
+[README.md](http://readme.md/)
 
-### 🚖 git flow 전략 사용
-- master: 제품으로 출시될 수 있는 브랜치
-- develop: 다음 출시 버전을 개발하는 브랜치
-- feature: 기능을 개발하는 브랜치 (ex: feature/IMU_jh)
-- release: 이번 출시 버전을 준비하는 브랜치
-- hotfix: 출시 버전에서 발생한 버그를 수정하는 브랜치
-### 🚖 Commit Message
-[참고자료](https://chanhuiseok.github.io/posts/git-4/)
-- 목적 : 커밋 메시지를 커밋 템플릿을 사용하여 보기 쉽고 간편하게 작성하자.
-- 아래 명령어를 입력하고, `git commit` 입력시, 커밋 템플릿이 자동으로 `vi 에디터` 환경으로 나올 것입니다. 3개의 `##########` 부분 윗 줄에 각각 제목, 본문, 꼬릿말을 추가하고 `:wq!`를 입력하고 엔터를 누릅니다.
-  ```
-  git config --global commit.template <.gitmessage.txt 경로>
+# 🚖 싸삐라리
 
-  ```
-- 커밋 메세지 구성 방법
-  ```
-  <type>[optional scope]: <description>
-  [optional body]
-  [optional footer(s)]
-  ```
-- 제목은 어떤 것을 했는지 명확한 단어가 들어가야 하고, 너무 길게 작성하지 않는다.
-- 내용은 선택사항이나 자세한 커밋 메세지를 작성하고자 할 때, 제목에 이어 부가적인 설명을 붙인다. 이 커밋을 한 이유와 변경 내용 등을 작성한다.
-- 푸터는 선택사항이고 관련 이슈 번호를 참조시킬 때 주로 사용한다.
+![Image Pasted at 2023-3-20 13-26.png](Readme%208775ee93de5140cbb3c61733bc660798/Image_Pasted_at_2023-3-20_13-26.png)
+
+## ✨ 프로젝트 소개
+
+```
+Morai 시뮬레이터상에서 ROS기반 자율주행 구현 및 공유택시 모바일 웹 서비스 개발
+```
+
+## 🙂 기획 배경
+
+```
+ - 기존 운행중인 자율주행 서비스에 대한 단점을 극복하고자 개발
+현재 5 ~ 50km정도의 자율주행 구역으로인해 서비스가 버스와 셔틀로 한정되어있음.
+이를 개선하여 싸삐라리는 상암일대 전 지역 서비스가 가능하여 공유 택시 서비스로 확장
+```
+
+## 😎 서비스 기능
+
+1. 출발지 위치 설정
+2. 도착지 위치 설정
+3. 택시 호출
+4. 택시 위치 확인
+5. MORAI상에서 택시 자율주행
+
+## 👀 Overview
+
+### 1. 로그인 전
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled.png)
+
+### 2. 로그인 후
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%201.png)
+
+### 3. 택시 호출
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%202.png)
+
+### 4. 공유택시호출
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%203.png)
+
+### 5. 출발지 설정
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%204.png)
+
+### 6. 도착지 검색
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%205.png)
+
+### 7. 도착지 선택
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%206.png)
+
+### 8. 택시 매칭중
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%207.png)
+
+### 9. 택시 운행중
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%208.png)
+
+## 🦄 기대효과 & 발전방향
+
+- 공유택시 금액절감
+- 교통 정체, 완화
+- 고령자 이동 지원
+- 운전 피로도 감소
+- 교통사고 저감
+
+## 💻 Tech Stack
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%209.png)
+
+### 시스템 아키텍처
+
+![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%2010.png)
+
+## Backend( VM-Ubuntu18.04 )
+
+```
+Python 2.7
+ROS melodic
+
+```
+
+### Frontend
+
+```
+$ cd FrontEnd/ssafyrari
+$ npm install
+$ npm start
+
+```
+
+## 🤼‍♂️ Author
+
+Team Leader & 자율주행: 🐯김지호
+
+자율주행 (인지, 판단): 🐱 고현영
+
+자율주행 (판단, 제어): 🐶 백현웅
+
+자율주행(판단) & WEB: 🐺 박상현
+
+자율주행 (판단, 제어) : 🐱 지이주
+
+자율주행(인지, 제어) : 🦁 양영진
