@@ -1,10 +1,6 @@
-# Readme
-
-[README.md](http://readme.md/)
-
 # 🚖 싸삐라리
 
-![Image Pasted at 2023-3-20 13-26.png](Readme%208775ee93de5140cbb3c61733bc660798/Image_Pasted_at_2023-3-20_13-26.png)
+![Image Pasted at 2023-3-20 13-26.png](Readme/Image_Pasted_at_2023-3-20_13-26.png)
 
 ## ✨ 프로젝트 소개
 
@@ -32,39 +28,39 @@ Morai 시뮬레이터상에서 ROS기반 자율주행 구현 및 공유택시 �
 
 ### 1. 로그인 전
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled.png)
+![Untitled](Readme/Untitled.png)
 
 ### 2. 로그인 후
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%201.png)
+![Untitled](Readme/Untitled%201.png)
 
 ### 3. 택시 호출
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%202.png)
+![Untitled](Readme/Untitled%202.png)
 
 ### 4. 공유택시호출
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%203.png)
+![Untitled](Readme/Untitled%203.png)
 
 ### 5. 출발지 설정
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%204.png)
+![Untitled](Readme/Untitled%204.png)
 
 ### 6. 도착지 검색
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%205.png)
+![Untitled](Readme/Untitled%205.png)
 
 ### 7. 도착지 선택
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%206.png)
+![Untitled](Readme/Untitled%206.png)
 
 ### 8. 택시 매칭중
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%207.png)
+![Untitled](Readme/Untitled%207.png)
 
 ### 9. 택시 운행중
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%208.png)
+![Untitled](Readme/Untitled%208.png)
 
 ## 🦄 기대효과 & 발전방향
 
@@ -76,11 +72,11 @@ Morai 시뮬레이터상에서 ROS기반 자율주행 구현 및 공유택시 �
 
 ## 💻 Tech Stack
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%209.png)
+![Untitled](Readme/Untitled%209.png)
 
 ### 시스템 아키텍처
 
-![Untitled](Readme%208775ee93de5140cbb3c61733bc660798/Untitled%2010.png)
+![Untitled](Readme/Untitled%2010.png)
 
 ## Backend( VM-Ubuntu18.04 )
 
